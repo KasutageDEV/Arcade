@@ -1,0 +1,15 @@
+.alert {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: auto;
+	padding: 20px;
+	text-align: center;
+	color: #fff;
+	font-size: 16px;
+	font-weight: 500;
+	border-radius: 6px;
+}
+
+.alert.danger {background: #F55050;}
+.alert.danger:hover {background: #F55050;}

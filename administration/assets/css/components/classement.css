@@ -1,0 +1,18 @@
+.classement {
+	display: flex;
+	margin-bottom: 50px;
+	gap: 15px;
+	flex-wrap: wrap;
+}
+
+.classement a {
+	padding: 10px 25px;
+	border-radius: 6px;
+	background: #F55050;
+	color: #fff;
+	text-decoration: none;
+	font-size: 13px;
+	transition: background 0.3s ease-in-out;
+}
+
+.classement a:hover {background: #CD3939;}

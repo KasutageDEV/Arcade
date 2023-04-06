@@ -1,0 +1,66 @@
+.user-list {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.user-list__profil {
+	display: flex;
+	align-items: center;
+}
+
+.user-list__place {
+	width: 35px;
+	height: 35px;
+	object-fit: cover;
+	margin-right: 10px;
+}
+
+.user-list__avatar {
+	position: relative;
+	width: 35px;
+	height: 35px;
+	margin-right: 5px;
+}
+
+.user-list__profil p {
+	font-size: 13px;
+}
+
+.user-list__avatar img {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	top: -23px;
+}
+
+.user-list__info {
+	font-size: 16px;
+	font-weight: lighter;
+}
+
+.user-list__info span {font-weight: bold;}
+
+.user-list__badge {
+	padding: 3px 10px;
+	border-radius: 6px;
+	color: #fff;
+	font-size: 12px;
+}
+
+.user-list__badge.success {
+	background: #38E27C;
+	color: #fff;
+}
+
+.user-list__badge.warning {
+	background: #E2BD38;
+	color: #333;
+}
+
+.user-list__badge.danger {
+	background: #E23838;
+	color: #fff;
+}

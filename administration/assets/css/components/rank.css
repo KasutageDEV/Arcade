@@ -1,0 +1,94 @@
+.rank__group {
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+.rank__group label {
+	display: block;
+	font-weight: bold;
+	font-size: 13px;
+	margin-bottom: 5px;
+	color: #5A5A67;
+}
+
+.rank__input {
+	display: block;
+	position: relative;
+	background: #F5F5F5;
+	width: 100%;
+	height: 40px;
+	border-radius: 6px;
+	border: none;
+	outline: none;
+	padding: 0 10px;
+	font-family: 'Quicksand', sans-serif;
+}
+
+.rank__submit {
+	padding: 15px 30px;
+	width: 100%;
+	border-radius: 6px;
+	color: #fff;
+	background: #7280BC;
+	font-size: 14px;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	transition: background 0.3s ease-in-out;
+}
+
+.rank__submit:hover {
+	background: #4F5D9A;
+}
+
+.rank__choice {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+.rank__choice p {
+	font-weight: 500;
+	font-size: 16px;
+	color: #5A5A67;
+}
+
+.rank__choice label {
+	position: relative;
+	width: 30px;
+	height: 30px;
+	border-radius: 6px;
+	background: #F55050;
+	cursor: pointer;
+	transition: background 0.2s ease-in-out;
+}
+
+.rank__choice label::after {
+	content: '⤫';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateX(-50%) translateY(-50%);
+	color: #fff;
+	transition: content 0.2s ease-in-out;
+}
+
+.rank__choice input {display: none;}
+
+.rank__choice input[type="checkbox"]:checked + label {background: #38E27C;}
+.rank__choice input[type="checkbox"]:checked + label::after {content: '✓';}
+
+.rank__badge-content {
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%;
+	gap: 30px;
+}
+
+.rank__badge {
+	width: fit-content;
+	height: auto;
+	text-align: center;
+}

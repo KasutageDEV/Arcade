@@ -1,0 +1,77 @@
+.link__content {
+	display: flex;
+	width: 100%;
+	gap: 50px;
+	flex-wrap: wrap;
+	margin-bottom: 50px;
+}
+
+.link {
+	text-decoration: none;
+}
+
+.link:hover .link__image {
+	width: 160px;
+}
+
+.link:hover .link__image i {font-size: 45px;}
+
+.link__image {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	background: transparent;
+	width: 150px;
+	height: 80px;
+	border-radius: 6px;
+	margin-bottom: 10px;
+	transition: width 0.3s ease-in-out;
+}
+
+.link__image i {
+	font-size: 35px;
+	transition: font-size 0.3s ease-in-out;
+}
+
+.link p {
+	color: #AFAFB9;
+	font-weight: 500;
+	text-align: center;
+	font-size: 13px;
+}
+
+.link__image.warning {background: #FFFAED;}
+.link__image.warning i {color: #FDE15A;}
+
+.link__image.success {background: #EFF9FC;}
+.link__image.success i {color: #76CDD6;}
+
+.link__image.pink {background: #FEF2FD;}
+.link__image.pink i {color: #F49FEB;}
+
+.link__image.gray {background: #EFF0F5;}
+.link__image.gray i {color: #7F8AB2;}
+
+.link__image.pruple {background: #F5F3FF;}
+.link__image.pruple i {color: #AA9DF4;}
+
+.link__image.blue {background: #F2F4FF;}
+.link__image.blue i {color: #87A7FF;}
+
+.link__image.danger {background: #FFEDED;}
+.link__image.danger i {color: #FD5A5A;}
+
+.link__notif {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	color: #fff;
+	background: #F55050;
+}

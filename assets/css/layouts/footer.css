@@ -1,0 +1,35 @@
+.footer {
+	position: relative;
+	width: 100%;
+	height: auto;
+}
+
+.footer img {
+	width: 100%;
+	height: auto;
+}
+
+.footer__content {
+	width: 100%;
+	height: auto;
+	padding: 30px;
+	color: #fff;
+	font-weight: 300;
+	text-align: center;
+	background: #333;
+	margin-top: -5px;
+}
+
+.footer__content i {
+	color: #EC3460;
+}
+
+.footer__content a {
+	color: #fff;
+	font-weight: bold;
+	transition: all 0.3s ease-in-out;
+}
+
+.footer__content a:hover {
+	color: #4B93FF;
+}

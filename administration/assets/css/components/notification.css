@@ -1,0 +1,36 @@
+.notification {
+	width: 100%;
+	height: auto;
+}
+
+.notification form textarea {
+	width: 100%;
+	min-height: 150px;
+	height: auto;
+	padding: 10px;
+	border-radius: 6px;
+	color: #333;
+	background: #f5f5f5;
+	max-width: 100%;
+	min-width: 100%;
+	font-family: 'Quicksand', sans-serif;
+	border: none;
+	outline: none;
+	margin-bottom: 10px;
+}
+
+.notification form button {
+	padding: 10px 20px;
+	border-radius: 6px;
+	color: #fff;
+	background: #7280BC;
+	font-size: 13px;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	transition: background 0.3s ease-in-out;
+}
+
+.notification form button:hover {
+	background: #4F5D9A;
+}

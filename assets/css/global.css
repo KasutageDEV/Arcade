@@ -1,0 +1,27 @@
+/*Quicksand*/
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+/*COMPONENTS*/
+@import './components/main.css';
+@import './components/bloc.css';
+@import './components/information.css';
+@import './components/modal.css';
+@import './components/alert.css';
+
+/*LAYOUTS*/
+@import './layouts/header.css';
+@import './layouts/footer.css';
+
+/*MODULES*/
+@import './modules/last-news.css';
+@import './modules/news-hc.css';
+@import './modules/user-list.css';
+@import './modules/dedicace.css';
+@import './modules/staff.css';
+@import './modules/article.css';
+@import './modules/about.css';
+@import './modules/flux.css';
+
+/*MORE*/
+@import './more/reset.css';
+@import './more/grid.css';

@@ -1,0 +1,166 @@
+.flux {
+	width: 100%;
+	height: auto;
+	background: #fff;
+	box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.4);
+	border-radius: 6px;
+	margin-bottom: 20px;
+}
+
+.flux:nth-last-child(-n+1) {
+	margin-bottom: 150px;
+}
+
+.flux__info {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px;
+}
+
+.flux__avatar {
+	position: relative;
+	width: 40px;
+	height: 50px;
+	overflow: hidden;
+	margin-right: 10px;
+}
+
+.flux__avatar img {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	top: -20px;
+}
+
+.flux__user {
+	display: flex;
+	align-items: center;
+}
+
+.flux__pseudo h1 {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.flux__pseudo h2 {
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.flux__pseudo h2.success {color: #38E27C;}
+
+.flux__pseudo h2.danger {color: #E23838;}
+
+.flux__pseudo h2.warning {color: E2BD38;}
+
+.flux__update {
+	display: flex;
+	align-items: center;
+}
+
+.flux__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 25px;
+	height: 25px;
+	margin-right: 10px;
+}
+
+.flux .flux__update:nth-last-child(-n+1) .flux__icon {
+	border-radius: 0 0 0 6px;
+}
+
+.flux__icon i {color: #fff;}
+
+.flux__icon.success {background: #38E27C;}
+.flux__icon.danger {background: #E23838;}
+
+.flux__btn {
+	width: 40px;
+	height: 40px;
+	color: #fff;
+	font-size: 16px;
+	text-transform: uppercase;
+	outline: none;
+	border-radius: 6px;
+	border: none;
+	background: #E23838;
+	box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.4);
+	transition: box-shadow 0.1s ease-in-out;
+	margin-bottom: 20px;
+	cursor: pointer;
+	float: right;
+}
+
+.flux__btn i {
+	animation-name: spin;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+.flux__btn:hover {
+	box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes spin { 
+    from { 
+        transform: rotate(0deg); 
+    } to { 
+        transform: rotate(360deg); 
+    }
+}
+
+.flux__clear {clear: both;}
+
+.flux__add {
+	display: none;
+	position: fixed;
+	top: 100px;
+	left: 100px;
+	background: #fff;
+	box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.4);
+	width: 300px;
+	height: auto;
+	padding: 20px;
+	border-radius: 6px;
+	z-index: 99999;
+}
+
+.flux__add.active {
+	display: block;
+}
+
+.flux__add h1 {
+	font-weight: bold;
+	text-align: center;
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+
+.flux__input {
+	width: 100%;
+	height: 30px;
+	border-radius: 6px;
+	margin-bottom: 10px;
+	background: #f1f1f1;
+	border: none;
+	outline: none;
+	padding: 0 10px;
+}
+
+.flux__input:nth-last-child(-n+1) {
+	margin-bottom: 0;
+}
+
+.flux__submit {
+	width: 100%;
+	height: 30px;
+	color: #fff;
+	background: #4B93FF;
+	border-radius: 6px;
+	border: none;
+	outline: none;
+}
