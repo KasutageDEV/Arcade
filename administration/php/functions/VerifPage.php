@@ -7,15 +7,13 @@ function VerifPage($user, $verif) {
 	$verif_page->execute(array($user));
 	$verif_page_infos = $verif_page->fetch();
 
-	if($verif_page->rowCount() == 1) { // On vérifie ici si le joueur est enregistrer dans la table users_staffs !
-	    if($verif_page_infos->$verif == 1) { // On vérifie ici si le joueur à accès à la page en question !
-	        // Page autorisé !
-	    } else {
-	        header('Location: '.$website_infos->link.'/index');
-	        exit();
-	    }
-	} else {
-	    header('Location: '.$website_infos->link.'/index');
-	    exit();
+	if($verif_page->rowCount() == 0) {
+		 header('Location: '.$website_infos->link.'/index');
+		 exit();
+	}
+
+	if($verif_page_infos->$verif == 0) {
+		header('Location: '.$website_infos->link.'/index');
+		exit();
 	}
 }

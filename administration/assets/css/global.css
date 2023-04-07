@@ -9,6 +9,7 @@
 @import './components/notification.css';
 @import './components/article.css';
 @import './components/rank.css';
+@import './components/alert.css';
 
 /*LAYOUTS*/
 @import './layouts/dashboard.css';

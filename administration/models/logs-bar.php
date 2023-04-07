@@ -1,11 +1,17 @@
 				<div class="dashboard__logs">
 					<h1>Logs</h1>
+
+					<?php
+					require('../php/functions/Date.php');
+					$logs = $bdd->query('SELECT * FROM logs ORDER BY date DESC LIMIT 50');
+					while($logs_infos = $logs->fetch()) {
+						$userLogs = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+						$userLogs->execute(array($logs_infos->user_id));
+						$userLogs_infos = $userLogs->fetch();
+					?>
 					<div class="logs">
-						<h2>Aujourd'hui · 08:20</h2>
-						<p>Kasutage à publié un article</p>
+						<h2><?= formater_date($logs_infos->date); ?></h2>
+						<p><?= $userLogs_infos->username; ?> <?= $logs_infos->logs; ?></p>
 					</div>
-					<div class="logs">
-						<h2>Aujourd'hui · 08:20</h2>
-						<p>Kasutage à publié un article</p>
-					</div>
+					<?php } ?>
 				</div>

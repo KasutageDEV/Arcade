@@ -7,4 +7,5 @@
 html, body {
 	font-family: 'Quicksand', sans-serif;
 	background: #C0CCF1;
+	overflow-y: hidden;
 }

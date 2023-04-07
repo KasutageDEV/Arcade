@@ -1,5 +1,85 @@
 <?php
+require('../global.php');
 $page = 'article-add';
+
+if(!isset($_SESSION['id'])) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+$verifPage = $bdd->prepare('SELECT * FROM users_staffs WHERE user_id = ?');
+$verifPage->execute(array($session_infos->id));
+$verifPage_infos = $verifPage->fetch();
+
+if($verifPage->rowCount() == 0 || $verifPage_infos->page_articleAdd == 0) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+function verifDate($date, $format = 'd-m-Y') {
+	$dateTime = DateTime::createFromFormat($format, $date);
+	if($dateTime === false) {
+		return false;
+	}
+	return $dateTime->format($format) === $date;
+}
+
+if(isset($_POST['submit__article'])) {
+	if(!empty($_POST['titre']) AND !empty($_POST['description']) AND !empty($_POST['publication']) AND !empty($_POST['contenu'])) {
+
+		$titre 			= htmlspecialchars($_POST['titre']);
+		$description 	= htmlspecialchars($_POST['description']);
+		$contenu 		= htmlspecialchars($_POST['contenu']);
+		$publication 	= htmlspecialchars($_POST['publication']);
+		$date 			= date('d-m-Y H:i:s');
+
+		if(strlen($titre) <= 255) {
+			if(strlen($description) <= 255) {
+				if(isset($_FILES['image'])) {
+					$tmpName = $_FILES['image']['tmp_name'];
+	                $name = $_FILES['image']['name'];
+	                $size = $_FILES['image']['size'];
+	                $error1 = $_FILES['image']['error'];
+
+	                $tabExtension = explode('.', $name);
+	                $extension = strtolower(end($tabExtension));
+
+	                $extensions = ['jpg', 'png', 'jpeg', 'gif'];
+	                $maxSize = 400000;
+
+	                if(in_array($extension, $extensions) && $size <= $maxSize && $error1 == 0){
+
+	                    $uniqueName = uniqid('', true);
+	                    //uniqid génère quelque chose comme ca : 5f586bf96dcd38.73540086
+	                    $file = $uniqueName.".".$extension;
+	                    //$file = 5f586bf96dcd38.73540086.jpg
+
+	                    if(move_uploaded_file($tmpName, '../imagesArticle/'.$file)) {
+	                        $insert = $bdd->prepare('INSERT INTO articles(titre, description, image, author, corrector, validator, contenu, date_publication, date_post, etat) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+	                        $insert->execute(array($titre, $description, $file, $session_infos->username, $session_infos->username, $session_infos->username, $contenu, $publication, $date, 1));
+
+	                        $logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+	                        $logs->execute(array($session_infos->id, 'à rédiger un article', $date));
+	                        $validate = 'Article publié avec succès !';
+	                    } else {
+	                        $erreur = 'Une erreur est survenue';
+	                    }
+	                } else{
+	                    $error = "Une erreur est survenue";
+	                }
+				} else {
+					$erreur = 'Vous devez upload une image !';
+				}
+			} else {
+				$erreur = 'La description ne peut dépasser 255 caractères !';
+			}
+		} else {
+			$erreur = 'Le titre ne peut dépasser 255 caractères !';
+		}
+	} else {
+		$erreur = 'Vous devez remplir tous les champs !';
+	}
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -37,7 +117,12 @@ $page = 'article-add';
 			<?php require('./models/header.php'); ?>
 			<div class="dashboard__body">
 				<div class="dashboard__content">
-					<form method="POST" action="">
+					<?php if(isset($validate)) { ?>
+					<div class="alert success"><?= $validate; ?></div>
+					<?php } if(isset($erreur)) { ?>
+					<div class="alert danger"><?= $erreur; ?></div>
+					<?php } ?>
+					<form method="POST" action="" enctype="multipart/form-data">
 						<div class="row">
 							<div class="col-lg-8 col-md-6 col-sm-12">
 								<textarea id="article-add" class="article__textarea" rows="15" name="contenu"></textarea>
@@ -53,7 +138,7 @@ $page = 'article-add';
 								</div>
 								<div class="article__group">
 									<label>Image</label>
-									<input type="text" name="image" placeholder="Image" class="article__input">
+									<input type="file" name="image" placeholder="Image" class="article__input">
 								</div>
 								<div class="article__group">
 									<label>Programmé la publication</label>
@@ -83,9 +168,6 @@ $page = 'article-add';
         		{ value: 'Email', title: 'Email' },
       		]
     	});
-    	$( function() {
-		    $( "#date" ).datepicker();
-		});
   	</script>
 </body>
 </html>

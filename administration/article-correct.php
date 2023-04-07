@@ -1,5 +1,61 @@
 <?php
+require('../global.php');
 $page = 'article-correct';
+
+if(!isset($_SESSION['id'])) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+$verifPage = $bdd->prepare('SELECT * FROM users_staffs WHERE user_id = ?');
+$verifPage->execute(array($session_infos->id));
+$verifPage_infos = $verifPage->fetch();
+
+if($verifPage->rowCount() == 0 || $verifPage_infos->page_articleCorrect == 0) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+if(isset($_GET['id']) AND !empty($_GET['id'])) {
+    $id = intval($_GET['id']);
+    $article = $bdd->prepare('SELECT * FROM articles WHERE id = :id, etat = 1');
+    $article->execute(['id' => $id]);
+    if($article->rowCount() == 1) {
+    } else {
+        $article = $bdd->query('SELECT * FROM articles ORDER BY id DESC LIMIT 0,1');
+    }
+} else {
+    $article = $bdd->query('SELECT * FROM articles ORDER BY id DESC LIMIT 0,1');
+}
+$article_infos = $article->fetch();
+
+if(isset($_POST['submit__article'])) {
+	if(!empty($_POST['titre']) AND !empty($_POST['description']) AND !empty($_POST['contenu'])) {
+
+		$titre 			= htmlspecialchars($_POST['titre']);
+		$description 	= htmlspecialchars($_POST['description']);
+		$contenu 		= htmlspecialchars($_POST['contenu']);
+		$id 			= intval($_POST['article_id']);
+		$date 			= date('d-m-Y H:i:s');
+
+		if(strlen($titre)) {
+			if(strlen($description)) {
+				$correct = $bdd->prepare('UPDATE articles SET titre = ?, description = ?, contenu = ?, corrector = ?, etat = ? WHERE id = ?');
+				$correct->execute(array($titre, $description, $contenu, $session_infos->username, 2, $id));
+
+				$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+	            $logs->execute(array($session_infos->id, 'à corriger un article', $date));
+				$validate = 'L\'article à bien été modifier';
+			} else {
+				$erreur = 'La description ne peut dépasser 255 caractères !';
+			}
+		} else {
+			$erreur = 'Le titre ne peut dépasser 255 caractères !';
+		}
+	} else {
+		$erreur = 'Vous devez remplir tous les champs !';
+	}
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -40,6 +96,11 @@ $page = 'article-correct';
 			<?php require('./models/header.php'); ?>
 			<div class="dashboard__body">
 				<div class="dashboard__content">
+					<?php if(isset($validate)) { ?>
+					<div class="alert success"><?= $validate; ?></div>
+					<?php } if(isset($erreur)) { ?>
+					<div class="alert danger"><?= $erreur; ?></div>
+					<?php } ?>
 					<div class="row">
 						<div class="col-lg-5 col-md-6 col-sm-12">
 							<div class="article__table">
@@ -52,35 +113,34 @@ $page = 'article-correct';
 							            </tr>
 							        </thead>
 							        <tbody>
+							        	<?php
+							        	$articles_a_corriger = $bdd->prepare('SELECT * FROM articles WHERE etat = ?');
+							        	$articles_a_corriger->execute(array(1));
+							        	while($articles_a_corriger_infos = $articles_a_corriger->fetch()) {
+							        	?>
 							            <tr>
-							                <td>Titre de l'article</td>
-							                <td>Kasutage</td>
-							                <td><a href="#">Modifier</a></td>
+							                <td><?= $articles_a_corriger_infos->titre; ?></td>
+							                <td><?= $articles_a_corriger_infos->author; ?></td>
+							                <td><a href="?id=<?= $articles_a_corriger_infos->id; ?>">Corriger</a></td>
 							            </tr>
+							        	<?php } ?>
 							        </tbody>
 							    </table>
 							</div>
 						</div>
 						<div class="col-lg-7 col-md-6 col-sm-12">
 							<form method="POST" action="">
-								<textarea id="article-add" class="article__textarea" rows="15" name="contenu"></textarea>
-								<div class="article__group" style="margin-top: 20px;">
+								<input type="hidden" name="article_id" value="<?= $article_infos->id; ?>">
+								<div class="article__group">
 									<label>Titre</label>
-									<input type="text" name="titre" placeholder="Titre" class="article__input">
+									<input type="text" name="titre" placeholder="Titre" class="article__input" value="<?= $article_infos->titre; ?>">
 								</div>
 								<div class="article__group">
 									<label>Description</label>
-									<input type="text" name="description" placeholder="Description" class="article__input">
+									<input type="text" name="description" placeholder="Description" class="article__input" value="<?= $article_infos->description; ?>">
 								</div>
-								<div class="article__group">
-									<label>Image</label>
-									<input type="text" name="image" placeholder="Image" class="article__input">
-								</div>
-								<div class="article__group">
-									<label>Programmé la publication</label>
-									<input type="date" id="date" name="publication" class="article__input">
-								</div>
-								<button type="submit" name="submit__article" class="article__submit">Valider</button>
+								<textarea id="article-add" class="article__textarea" rows="15" name="contenu"><?= $article_infos->contenu; ?></textarea>
+								<button type="submit" name="submit__article" class="article__submit" style="margin-top:20px;">Corriger</button>
 							</form>
 						</div>
 					</div>
@@ -107,9 +167,6 @@ $page = 'article-correct';
         		{ value: 'Email', title: 'Email' },
       		]
     	});
-    	$( function() {
-		    $( "#date" ).datepicker();
-		});
 	</script>
 </body>
 </html>
