@@ -1,6 +1,14 @@
 <?php
 require('global.php');
 $page = 'staffs';
+// Liste des categorie_id :
+// Gestion : 1
+// Administration : 2
+// Édition : 3
+// Animation : 4
+// Évènementiel : 5
+// Communication : 6
+// Création : 7
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -61,39 +69,61 @@ $page = 'staffs';
 						<h1>Gestion</h1>
 					</div>
 					<div class="row">
+						<?php
+						$staff = $bdd->prepare('SELECT * FROM users_staffs WHERE categorie_id = ? ORDER BY position DESC');
+						$staff->execute(array(1));
+						while($staff_infos = $staff->fetch()) {
+							$user = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+							$user->execute(array($staff_infos->user_id));
+							$user_infos = $user->fetch();
+						?>
 						<div class="col-lg-6 col-sm-12">
 							<a href="#" class="staff">
 								<div class="staff__avatar">
-									<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+									<img src="https://api.habbocity.me/avatar_image.php?user=<?= $user_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 								</div>
 								<div class="staff__infos">
-									<h1>Kaana</h1>
-									<h2>Fondateur</h2>
+									<h1><?= $user_infos->username; ?></h1>
+									<h2><?= $staff_infos->fonction; ?></h2>
 								</div>
-								<img src="./assets/imgs/staffs/fonda.gif" class="staff__badge">
+								<img src="./assets/imgs/staffs/<?= $staff_infos->badge; ?>.gif" class="staff__badge">
 							</a>
 						</div>
+						<?php } if($staff->rowCount() == 0) { ?>
+							<center>Aucun staff dans cette catégorie !</center>
+						<?php } ?>
 					</div>
 				</div>
 				<!-- ADMIN -->
 				<div class="bloc">
 					<div class="bloc__title">
 						<img src="./assets/imgs/staffs/admin.gif">
-						<h1>Administrateur</h1>
+						<h1>Administration</h1>
 					</div>
 					<div class="row">
+						<?php
+						$staff = $bdd->prepare('SELECT * FROM users_staffs WHERE categorie_id = ? ORDER BY position DESC');
+						$staff->execute(array(2));
+						while($staff_infos = $staff->fetch()) {
+							$user = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+							$user->execute(array($staff_infos->user_id));
+							$user_infos = $user->fetch();
+						?>
 						<div class="col-lg-6 col-sm-12">
 							<a href="#" class="staff">
 								<div class="staff__avatar">
-									<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+									<img src="https://api.habbocity.me/avatar_image.php?user=<?= $user_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 								</div>
 								<div class="staff__infos">
-									<h1>Kaana</h1>
-									<h2>Fondateur</h2>
+									<h1><?= $user_infos->username; ?></h1>
+									<h2><?= $staff_infos->fonction; ?></h2>
 								</div>
-								<img src="./assets/imgs/staffs/fonda.gif" class="staff__badge">
+								<img src="./assets/imgs/staffs/<?= $staff_infos->badge; ?>.gif" class="staff__badge">
 							</a>
 						</div>
+						<?php } if($staff->rowCount() == 0) { ?>
+							<center>Aucun staff dans cette catégorie !</center>
+						<?php } ?>
 					</div>
 				</div>
 				<!-- ÉDITION -->
@@ -103,18 +133,29 @@ $page = 'staffs';
 						<h1>Édition</h1>
 					</div>
 					<div class="row">
+						<?php
+						$staff = $bdd->prepare('SELECT * FROM users_staffs WHERE categorie_id = ? ORDER BY position DESC');
+						$staff->execute(array(3));
+						while($staff_infos = $staff->fetch()) {
+							$user = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+							$user->execute(array($staff_infos->user_id));
+							$user_infos = $user->fetch();
+						?>
 						<div class="col-lg-6 col-sm-12">
 							<a href="#" class="staff">
 								<div class="staff__avatar">
-									<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+									<img src="https://api.habbocity.me/avatar_image.php?user=<?= $user_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 								</div>
 								<div class="staff__infos">
-									<h1>Kaana</h1>
-									<h2>Fondateur</h2>
+									<h1><?= $user_infos->username; ?></h1>
+									<h2><?= $staff_infos->fonction; ?></h2>
 								</div>
-								<img src="./assets/imgs/staffs/fonda.gif" class="staff__badge">
+								<img src="./assets/imgs/staffs/<?= $staff_infos->badge; ?>.gif" class="staff__badge">
 							</a>
 						</div>
+						<?php } if($staff->rowCount() == 0) { ?>
+							<center>Aucun staff dans cette catégorie !</center>
+						<?php } ?>
 					</div>
 				</div>
 			</div>
@@ -128,18 +169,29 @@ $page = 'staffs';
 						<h1>Animation</h1>
 					</div>
 					<div class="row">
+						<?php
+						$staff = $bdd->prepare('SELECT * FROM users_staffs WHERE categorie_id = ? ORDER BY position DESC');
+						$staff->execute(array(4));
+						while($staff_infos = $staff->fetch()) {
+							$user = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+							$user->execute(array($staff_infos->user_id));
+							$user_infos = $user->fetch();
+						?>
 						<div class="col-lg-6 col-sm-12">
 							<a href="#" class="staff">
 								<div class="staff__avatar">
-									<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+									<img src="https://api.habbocity.me/avatar_image.php?user=<?= $user_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 								</div>
 								<div class="staff__infos">
-									<h1>Kaana</h1>
-									<h2>Fondateur</h2>
+									<h1><?= $user_infos->username; ?></h1>
+									<h2><?= $staff_infos->fonction; ?></h2>
 								</div>
-								<img src="./assets/imgs/staffs/fonda.gif" class="staff__badge">
+								<img src="./assets/imgs/staffs/<?= $staff_infos->badge; ?>.gif" class="staff__badge">
 							</a>
 						</div>
+						<?php } if($staff->rowCount() == 0) { ?>
+							<center>Aucun staff dans cette catégorie !</center>
+						<?php } ?>
 					</div>
 				</div>
 				<!-- Évènementiel -->
@@ -149,18 +201,29 @@ $page = 'staffs';
 						<h1>Évènementiel</h1>
 					</div>
 					<div class="row">
+						<?php
+						$staff = $bdd->prepare('SELECT * FROM users_staffs WHERE categorie_id = ? ORDER BY position DESC');
+						$staff->execute(array(5));
+						while($staff_infos = $staff->fetch()) {
+							$user = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+							$user->execute(array($staff_infos->user_id));
+							$user_infos = $user->fetch();
+						?>
 						<div class="col-lg-6 col-sm-12">
 							<a href="#" class="staff">
 								<div class="staff__avatar">
-									<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+									<img src="https://api.habbocity.me/avatar_image.php?user=<?= $user_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 								</div>
 								<div class="staff__infos">
-									<h1>Kaana</h1>
-									<h2>Fondateur</h2>
+									<h1><?= $user_infos->username; ?></h1>
+									<h2><?= $staff_infos->fonction; ?></h2>
 								</div>
-								<img src="./assets/imgs/staffs/fonda.gif" class="staff__badge">
+								<img src="./assets/imgs/staffs/<?= $staff_infos->badge; ?>.gif" class="staff__badge">
 							</a>
 						</div>
+						<?php } if($staff->rowCount() == 0) { ?>
+							<center>Aucun staff dans cette catégorie !</center>
+						<?php } ?>
 					</div>
 				</div>
 				<!-- COMMUNICATION -->
@@ -170,18 +233,29 @@ $page = 'staffs';
 						<h1>Communication</h1>
 					</div>
 					<div class="row">
+						<?php
+						$staff = $bdd->prepare('SELECT * FROM users_staffs WHERE categorie_id = ? ORDER BY position DESC');
+						$staff->execute(array(6));
+						while($staff_infos = $staff->fetch()) {
+							$user = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+							$user->execute(array($staff_infos->user_id));
+							$user_infos = $user->fetch();
+						?>
 						<div class="col-lg-6 col-sm-12">
 							<a href="#" class="staff">
 								<div class="staff__avatar">
-									<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+									<img src="https://api.habbocity.me/avatar_image.php?user=<?= $user_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 								</div>
 								<div class="staff__infos">
-									<h1>Kaana</h1>
-									<h2>Fondateur</h2>
+									<h1><?= $user_infos->username; ?></h1>
+									<h2><?= $staff_infos->fonction; ?></h2>
 								</div>
-								<img src="./assets/imgs/staffs/fonda.gif" class="staff__badge">
+								<img src="./assets/imgs/staffs/<?= $staff_infos->badge; ?>.gif" class="staff__badge">
 							</a>
 						</div>
+						<?php } if($staff->rowCount() == 0) { ?>
+							<center>Aucun staff dans cette catégorie !</center>
+						<?php } ?>
 					</div>
 				</div>
 				<!-- CREATION -->
@@ -191,18 +265,29 @@ $page = 'staffs';
 						<h1>Création</h1>
 					</div>
 					<div class="row">
+						<?php
+						$staff = $bdd->prepare('SELECT * FROM users_staffs WHERE categorie_id = ? ORDER BY position DESC');
+						$staff->execute(array(7));
+						while($staff_infos = $staff->fetch()) {
+							$user = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+							$user->execute(array($staff_infos->user_id));
+							$user_infos = $user->fetch();
+						?>
 						<div class="col-lg-6 col-sm-12">
 							<a href="#" class="staff">
 								<div class="staff__avatar">
-									<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+									<img src="https://api.habbocity.me/avatar_image.php?user=<?= $user_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 								</div>
 								<div class="staff__infos">
-									<h1>Kaana</h1>
-									<h2>Fondateur</h2>
+									<h1><?= $user_infos->username; ?></h1>
+									<h2><?= $staff_infos->fonction; ?></h2>
 								</div>
-								<img src="./assets/imgs/staffs/fonda.gif" class="staff__badge">
+								<img src="./assets/imgs/staffs/<?= $staff_infos->badge; ?>.gif" class="staff__badge">
 							</a>
 						</div>
+						<?php } if($staff->rowCount() == 0) { ?>
+							<center>Aucun staff dans cette catégorie !</center>
+						<?php } ?>
 					</div>
 				</div>
 			</div>

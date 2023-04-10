@@ -52,48 +52,7 @@ $page = 'about';
 
 	<div class="container">
 		<div class="about">
-			<p>
-				Bienvenue sur la page "À propos" d'<b>Arcade</b>, le fansite HabboCity dédié à tous les passionnés du célèbre jeu en ligne, HabboCity Hotel. Arcade a été créé pour offrir aux membres de la communauté HabboCity une plateforme conviviale et amusante où ils peuvent partager leur amour pour le jeu, se tenir informés des dernières actualités et découvrir de nouveaux amis.
-			</p>
-			<h1>Notre mission :</h1>
-			<p>
-				Arcade a pour mission de créer un espace sûr et divertissant pour les joueurs d'HabboCity de tous horizons. Nous nous engageons à fournir des informations à jour, des conseils utiles, des guides de jeu et des ressources pour aider les joueurs à tirer le meilleur parti de leur expérience sur HabboCity.
-			</p>
-			<h1>Nos valeurs :</h1>
-			<ol>
-				<li>
-					<b>Communauté :</b> Nous croyons en la force de la communauté d'HabboCity et nous nous efforçons de créer un espace où tous les joueurs peuvent se sentir les bienvenus et soutenus.
-				</li>
-				<li>
-					<b>Créativité :</b> Arcade encourage la créativité et l'expression personnelle à travers des concours, des événements et des défis pour inspirer les membres de notre communauté.
-				</li>
-				<li>
-					<b>Intégrité :</b> Nous nous engageons à maintenir un environnement sûr et respectueux, en suivant les règles et les politiques d'HabboCity et en promouvant des comportements positifs.
-				</li>
-			</ol>
-			<h1>Ce que nous offrons :</h1>
-			<ul>
-				<li>
-					<b>Actualités et mises à jour :</b> Restez informé des dernières nouveautés, mises à jour et promotions d'HabboCity grâce à notre section Actualités.
-				</li>
-				<li>
-					<b>Guides et astuces :</b> Découvrez des guides détaillés sur les différents aspects du jeu, y compris la décoration de chambres, les échanges, les badges et bien plus encore.
-				</li>
-				<li>
-					<b>Événements et concours :</b> Participez à des événements exclusifs et des concours organisés par Arcade pour gagner des prix et des badges uniques.
-				</li>
-			</ul>
-			<h1>Notre équipe :</h1>
-			<p>
-				Arcade est géré par une équipe de bénévoles passionnés et dévoués qui sont également des joueurs d'HabboCity. Nous travaillons sans relâche pour offrir à notre communauté le meilleur contenu et les meilleures expériences possibles.
-			</p>
-			<p>
-				Nous sommes toujours à la recherche de nouveaux talents pour rejoindre notre équipe. Si vous êtes intéressé par la rédaction, la modération, l'organisation d'événements ou toute autre activité liée à Arcade, n'hésitez pas à nous contacter.
-			</p>
-			<p>
-				Rejoignez-nous dès aujourd'hui et découvrez pourquoi Arcade est le fansite d'HabboCity par excellence pour les joueurs du monde entier. À bientôt dans l'hôtel !
-			</p>
-			<h3>L'équipe Arcade</h3>
+			<?= $website_infos->a_propos; ?>
 		</div>
 	</div>
 

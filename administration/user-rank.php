@@ -1,5 +1,93 @@
 <?php
+require('../global.php');
+require('../php/functions/Date.php');
 $page = 'user-rank';
+
+if(!isset($_SESSION['id'])) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+$verifPage = $bdd->prepare('SELECT * FROM users_staffs WHERE user_id = ?');
+$verifPage->execute(array($session_infos->id));
+$verifPage_infos = $verifPage->fetch();
+
+if($verifPage->rowCount() == 0 OR $verifPage_infos->page_userRank == 0) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+if(isset($_POST['submit__rank'])) {
+	if(!empty($_POST['username']) AND !empty($_POST['fonction']) AND !empty($_POST['badge']) AND !empty($_POST['categorie'])) {
+
+		// Variables :
+		$username 	= htmlspecialchars($_POST['username']);
+		$fonction 	= htmlspecialchars($_POST['fonction']);
+		$badge 		= htmlspecialchars($_POST['badge']);
+		$categorie 	= intval($_POST['categorie']);
+		$position 	= intval($_POST['position']);
+		$date 		= date('d-m-Y H:i:s');
+
+		// Défaut :
+		$page_articleAdd 		= 0;
+		$page_articleCorrect 	= 0;
+		$page_articleList 		= 0;
+		$page_articleValid 		= 0;
+		$page_userRank 			= 0;
+		$page_userList 			= 0;
+		$page_dedicaces			= 0;
+		$page_event 			= 0;
+		$page_flux	 			= 0;
+		$page_apropos 			= 0;
+		$page_bannis 			= 0;
+		$classement 			= 0;
+		$notification 			= 0;
+
+		// Si coché :
+		if(isset($_POST['page_articleAdd'])) 		{$page_articleAdd = 1;}
+		if(isset($_POST['page_articleCorrect'])) 	{$page_articleCorrect = 1;}
+		if(isset($_POST['page_articleList'])) 		{$page_articleList = 1;}
+		if(isset($_POST['page_articleValid'])) 		{$page_articleValid = 1;}
+		if(isset($_POST['page_userRank'])) 			{$page_userRank = 1;}
+		if(isset($_POST['page_userList'])) 			{$page_userList = 1;}
+		if(isset($_POST['page_dedicaces'])) 		{$page_dedicaces = 1;}
+		if(isset($_POST['page_event'])) 			{$page_event = 1;}
+		if(isset($_POST['page_flux'])) 				{$page_flux = 1;}
+		if(isset($_POST['page_apropos'])) 			{$page_apropos = 1;}
+		if(isset($_POST['page_bannis'])) 			{$page_bannis = 1;}
+		if(isset($_POST['classement'])) 			{$classement = 1;}
+		if(isset($_POST['notification'])) 			{$notification = 1;}
+
+		// Vérification de l'existance du membre :
+		$user = $bdd->prepare('SELECT * FROM users WHERE username = ?');
+        $user->execute(array($username));
+        $user_infos = $user->fetch();
+
+        $verfistaff = $bdd->prepare('SELECT * FROM users_staffs WHERE user_id = ?');
+        $verfistaff->execute(array($user_infos->id));
+
+        if($user->rowCount() == 1) {
+        	if($verfistaff->rowCount() == 0) {
+        		if($categorie == '1' || $categorie == '2'  || $categorie == '3'  || $categorie == '4'  || $categorie == '5'  || $categorie == '6'  || $categorie == '7') {
+
+        			$insert = $bdd->prepare('INSERT INTO users_staffs(user_id, fonction, badge, categorie_id, position, page_index, page_articleAdd, page_articleCorrect, page_articleList, page_article_Valid, page_userRank, page_userList, page_dedicaces, page_event, page_flux, page_apropos, page_bannis, classement, notification) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        			$insert->execute(array($user_infos->id, $fonction, $badge, $categorie, $position, 1, $page_articleAdd, $page_articleCorrect, $page_articleList, $page_articleValid, $page_userRank, $page_userList, $page_dedicaces, $page_event, $page_flux, $page_apropos, $page_bannis, $classement, $notification));
+        			$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+                    $logs->execute(array($session_infos->id, 'à rank '.$username, $date));
+                    $validate = $username.' rank avec succès !';
+        		} else {
+        			$erreur = 'Une erreur est survenue !';
+        		}
+        	} else {
+        		$erreur = 'Le joueur que vous essayez de rank est déjà staff !';
+        	}
+        } else {
+        	$erreur = 'Le joueur que vous essayez de rank n\'existe pas !';
+        }
+	} else {
+		$erreur = 'Vous devez remplir tous les champs !';
+	}
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -31,16 +119,21 @@ $page = 'user-rank';
 			<?php require('./models/header.php'); ?>
 			<div class="dashboard__body">
 				<div class="dashboard__content">
+					<?php if(isset($validate)) { ?>
+					<div class="alert success"><?= $validate; ?></div>
+					<?php } if(isset($erreur)) { ?>
+					<div class="alert danger"><?= $erreur; ?></div>
+					<?php } ?>
 					<form method="POST" action="">
 						<div class="row">
-							<div class="col-lg-3 col-md-6 col-sm-12">
+							<div class="col-lg-6 col-md-6 col-sm-12">
 								<div class="dashboard__title">
 									<i class="fas fa-clipboard-list"></i>
 									<h1>Informations général</h1>
 								</div>
 								<div class="rank__group">
 									<label>Pseudo</label>
-									<input type="text" name="pseudo" placeholder="Pseudo" class="rank__input">
+									<input type="text" name="username" placeholder="Pseudo" class="rank__input">
 								</div>
 								<div class="rank__group">
 									<label>Fonction</label>
@@ -67,7 +160,7 @@ $page = 'user-rank';
 									<input type="number" name="position" placeholder="Position dans la page staff" class="rank__input">
 								</div>
 							</div>
-							<div class="col-lg-5 col-md-6 col-sm-12">
+							<div class="col-lg-6 col-md-6 col-sm-12">
 								<div class="dashboard__title">
 									<i class="fas fa-clipboard-list"></i>
 									<h1>Autorisation des pages</h1>
@@ -76,70 +169,76 @@ $page = 'user-rank';
 									<div class="col-lg-6 col-sm-12">
 										<div class="rank__choice">
 											<p>Créer un article</p>
-											<input type="checkbox" name="article-add" value="article-add" id="article-add">
+											<input type="checkbox" name="page_articleAdd" value="page_articleAdd" id="article-add">
 											<label for="article-add"></label>
 										</div>
 										<div class="rank__choice">
 											<p>Corriger un article</p>
-											<input type="checkbox" name="article-correct" value="article-correct" id="article-correct">
+											<input type="checkbox" name="page_articleCorrect" value="page_articleCorrect" id="article-correct">
 											<label for="article-correct"></label>
 										</div>
 										<div class="rank__choice">
 											<p>Gestion des articles</p>
-											<input type="checkbox" name="article-list" value="article-list" id="article-list">
+											<input type="checkbox" name="page_articleList" value="page_articleList" id="article-list">
 											<label for="article-list"></label>
 										</div>
 										<div class="rank__choice">
 											<p>Valider un article</p>
-											<input type="checkbox" name="article-valide" value="article-valide" id="article-valide">
+											<input type="checkbox" name="page_articleValid" value="page_articleValid" id="article-valide">
 											<label for="article-valide"></label>
 										</div>
 										<div class="rank__choice">
 											<p>Rank</p>
-											<input type="checkbox" name="user-rank" value="user-rank" id="user-rank">
+											<input type="checkbox" name="page_userRank" value="page_userRank" id="user-rank">
 											<label for="user-rank"></label>
 										</div>
 										<div class="rank__choice">
 											<p>Gestion des membres</p>
-											<input type="checkbox" name="user-list" value="user-list" id="user-list">
+											<input type="checkbox" name="page_userList" value="page_userList" id="user-list">
 											<label for="user-list"></label>
+										</div>
+										<div class="rank__choice">
+											<p>Gestion du classement</p>
+											<input type="checkbox" name="classement" value="classement" id="classement">
+											<label for="classement"></label>
+										</div>
+										<div class="rank__choice">
+											<p>Modification de l'information</p>
+											<input type="checkbox" name="notification" value="notification" id="notification">
+											<label for="notification"></label>
 										</div>
 									</div>
 									<div class="col-lg-6 col-sm-12">
 										<div class="rank__choice">
 											<p>Gestion des dédicaces</p>
-											<input type="checkbox" name="dedicaces" value="dedicaces" id="dedicaces">
+											<input type="checkbox" name="page_dedicaces" value="page_dedicaces" id="dedicaces">
 											<label for="dedicaces"></label>
 										</div>
 										<div class="rank__choice">
-											<p>Ajouter un event HC</p>
-											<input type="checkbox" name="eventHC-add" value="eventHC-add" id="eventHC-add">
-											<label for="eventHC-add"></label>
-										</div>
-										<div class="rank__choice">
 											<p>Gestion des events HC</p>
-											<input type="checkbox" name="eventHC-list" value="eventHC-list" id="eventHC-list">
+											<input type="checkbox" name="page_event" value="page_event" id="eventHC-list">
 											<label for="eventHC-list"></label>
 										</div>
 										<div class="rank__choice">
 											<p>Gestion des flux</p>
-											<input type="checkbox" name="flux" value="flux" id="flux">
+											<input type="checkbox" name="page_flux" value="page_flux" id="flux">
 											<label for="flux"></label>
 										</div>
 										<div class="rank__choice">
 											<p>Page à propos</p>
-											<input type="checkbox" name="propos" value="propos" id="propos">
+											<input type="checkbox" name="page_apropos" value="page_apropos" id="propos">
 											<label for="propos"></label>
 										</div>
 										<div class="rank__choice">
 											<p>Gestion des bannis</p>
-											<input type="checkbox" name="bannis" value="bannis" id="bannis">
+											<input type="checkbox" name="page_bannis" value="page_bannis" id="bannis">
 											<label for="bannis"></label>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="col-lg-4 col-md-6 col-sm-12">
+							<button type="submit" name="submit__rank" class="rank__submit">Rank le membre</button>
+							<!-- <div class="col-lg-4 col-md-6 col-sm-12">
 								<div class="dashboard__title">
 									<i class="fas fa-clipboard-list"></i>
 									<h1>Liste des badges</h1>
@@ -161,9 +260,8 @@ $page = 'user-rank';
 									</div>
 									<?php } } closedir($handle); } ?>
 								</div>
-							</div>
+							</div> -->
 						</div>
-						<button type="submit" name="submit__rank" class="rank__submit">Rank le membre</button>
 					</form>
 				</div>
 				<?php require('./models/logs-bar.php'); ?>

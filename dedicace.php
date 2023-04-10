@@ -1,6 +1,21 @@
 <?php
 require('global.php');
+require('./php/functions/Date.php');
 $page = 'dedicace';
+
+if(isset($_POST['submit__dedicace'])) {
+	if(!empty($_POST['dedicace'])) {
+		$dedicace 	= htmlspecialchars($_POST['dedicace']);
+		$date 		= date('d-m-Y H:i:s');
+
+		$insert = $bdd->prepare('INSERT INTO dedicaces(user_id, message, date, etat) VALUES(?, ?, ?, ?)');
+		$insert->execute(array($session_infos->id, $dedicace, $date, 1));
+
+		$validate = 'Votre dédicaces à bien été envoyer et est en attente de validation !';
+	} else {
+		$erreur = 'Vous devez entrer un message !';
+	}
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -71,15 +86,24 @@ $page = 'dedicace';
 						<img src="./assets/imgs/emojis/clipboard_1f4cb.png">
 						<h1>Dernières dedicaces envoyées</h1>
 					</div>
+					<?php
+					$dedicace = $bdd->prepare('SELECT * FROM dedicaces WHERE etat = ? ORDER BY id DESC LIMIT 5');
+					$dedicace->execute(array(2));
+					while($dedicace_infos = $dedicace->fetch()) {
+						$userD = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+						$userD->execute(array($dedicace_infos->user_id));
+						$userD_infos = $userD->fetch();
+					?>
 					<div class="user-list">
 						<div class="user-list__profil">
 							<div class="user-list__avatar">
-								<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+								<img src="https://api.habbocity.me/avatar_image.php?user=<?= $userD_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 							</div>
-							<p>Kaana</p>
+							<p><?= $userD_infos->username; ?></p>
 						</div>
-						<div class="user-list__info">Il y a <span>2j</span></div>
+						<div class="user-list__info"><span><?= formater_date($dedicace_infos->date); ?></span></div>
 					</div>
+					<?php } ?>
 				</div>
 			</div>
 			<!-- RIGHT -->
@@ -89,16 +113,28 @@ $page = 'dedicace';
 						<img src="./assets/imgs/emojis/eye-in-speech-bubble_1f441-fe0f-200d-1f5e8-fe0f.png">
 						<h1>Mes dédicaces</h1>
 					</div>
+					<?php
+					$my_dedicace = $bdd->prepare('SELECT * FROM dedicaces WHERE user_id = ? ORDER BY id DESC');
+					$my_dedicace->execute(array($session_infos->id));
+					while($my_dedicace_infos = $my_dedicace->fetch()) {
+					?>
 					<div class="user-list">
 						<div class="user-list__profil">
 							<div class="user-list__avatar">
-								<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+								<img src="https://api.habbocity.me/avatar_image.php?user=<?= $session_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 							</div>
-							<p>Kaana</p>
+							<p><?= $session_infos->username; ?></p>
 						</div>
-						<div class="user-list__badge warning">En cours</div>
-						<div class="user-list__info">Il y a <span>2j</span></div>
+						<?php if($my_dedicace_infos->etat == 1) { ?>
+							<div class="user-list__badge warning">En attente</div>
+						<?php } if($my_dedicace_infos->etat == 2) { ?>
+							<div class="user-list__badge success">En ligne</div>
+						<?php } if($my_dedicace_infos->etat == 3) { ?>
+							<div class="user-list__badge danger">Refusée</div>
+						<?php } ?>
+						<div class="user-list__info"><span><?= formater_date($my_dedicace_infos->date); ?></span></div>
 					</div>
+					<?php } ?>
 				</div>
 			</div>
 		</div>

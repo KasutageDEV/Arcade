@@ -10,6 +10,7 @@
 @import './components/article.css';
 @import './components/rank.css';
 @import './components/alert.css';
+@import './components/badge.css';
 
 /*LAYOUTS*/
 @import './layouts/dashboard.css';

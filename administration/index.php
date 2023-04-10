@@ -1,5 +1,6 @@
 <?php
 require('../global.php');
+require('../php/functions/Date.php');
 $page = 'index';
 
 if(!isset($_SESSION['id'])) {
@@ -23,6 +24,43 @@ $count_nbrCorrection = $nbrCorrection->rowCount();
 $nbrValidation = $bdd->prepare('SELECT * FROM articles WHERE etat = ?');
 $nbrValidation->execute(array(2));
 $count_nbrValidation = $nbrValidation->rowCount();
+
+$nbrDedicaces = $bdd->prepare('SELECT * FROM dedicaces WHERE etat = ?');
+$nbrDedicaces->execute(array(1));
+$count_nbrDedicaces = $nbrDedicaces->rowCount();
+
+if(isset($_POST['submit__information'])) {
+	if(!empty($_POST['message'])) {
+		$message 	= htmlspecialchars($_POST['message']);
+		$date 		= date('d-m-Y H:i:s');
+
+		$update = $bdd->prepare('UPDATE settings SET information = ?');
+		$update->execute(array($message));
+
+		$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+    	$logs->execute(array($session_infos->id, 'à modifier l\'information', $date));
+
+    	$validate = 'Vous avez bien modifier la notification !';
+	} else {
+		$erreur = 'La notification ne peux être vide !';
+	}
+}
+
+if(isset($_GET['reset-topgamer'])) {
+	if($verifPage_infos->classement == 1) {
+		$date = date('d-m-Y H:i:s');
+		
+		$reset = $bdd->prepare('UPDATE users SET points_gamer = ?');
+		$reset->execute(array(0));
+
+		$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+    	$logs->execute(array($session_infos->id, 'à remis à 0 le top gamer', $date));
+
+    	$validate = 'Vous avez bien remis à 0 le Top Gamer !';
+	} else {
+		$erreur = 'Vous n\'êtes pas autorisé à remettre le top gamer à 0';
+	}
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -54,6 +92,11 @@ $count_nbrValidation = $nbrValidation->rowCount();
 			<?php require('./models/header.php'); ?>
 			<div class="dashboard__body">
 				<div class="dashboard__content">
+					<?php if(isset($validate)) { ?>
+					<div class="alert success"><?= $validate; ?></div>
+					<?php } if(isset($erreur)) { ?>
+					<div class="alert danger"><?= $erreur; ?></div>
+					<?php } ?>
 					<div class="link__content">
 						<?php if($verifPage_infos->page_articleAdd == 1) { ?>
 						<a href="./article-add" class="link">
@@ -106,7 +149,9 @@ $count_nbrValidation = $nbrValidation->rowCount();
 						<?php } if($verifPage_infos->page_dedicaces == 1) { ?>
 						<a href="./dedicaces" class="link">
 							<div class="link__image pink">
-								<div class="link__notif">6</div>
+								<?php if($count_nbrDedicaces >= 1) { ?>
+								<div class="link__notif"><?= $count_nbrDedicaces; ?></div>
+								<?php } ?>
 								<i class="fas fa-comments"></i>
 							</div>
 							<p>Gestion des dédicaces</p>
@@ -139,23 +184,18 @@ $count_nbrValidation = $nbrValidation->rowCount();
 							</div>
 							<p>Gestion des bannis</p>
 						</a>
+						<?php } if($verifPage_infos->classement == 1) { ?>
+						<a href="?reset-topgamer" class="link">
+							<div class="link__image danger">
+								<i class="fas fa-arrow-rotate-left"></i>
+							</div>
+							<p>Top Gamer à 0</p>
+						</a>
 						<?php } ?>
 					</div>
 					<div class="row">
-						<?php if($verifPage_infos->classement == 1) { ?>
-						<div class="col-lg-7 col-md-6 col-sm-12">
-							<div class="dashboard__title">
-								<i class="fas fa-trophy"></i>
-								<h1>Gestion des classements</h1>
-							</div>
-							<div class="classement">
-								<a href="#">Réinitialiser le Top Gamer</a>
-								<a href="#">Réinitialiser le Top Badges</a>
-								<a href="#">Réinitialiser le Top Richesse</a>
-							</div>
-						</div>
-						<?php } if($verifPage_infos->notification == 1) { ?>
-						<div class="col-lg-5 col-md-6 col-sm-12">
+						<?php if($verifPage_infos->notification == 1) { ?>
+						<div class="col-lg-4 col-md-6 col-sm-12">
 							<div class="dashboard__title">
 								<i class="fas fa-pen-to-square"></i>
 								<h1>Modifier la notification</h1>
@@ -163,7 +203,7 @@ $count_nbrValidation = $nbrValidation->rowCount();
 							<div class="notification">
 								<form method="POST" action="">
 									<textarea name="message"><?= $website_infos->information; ?></textarea>
-									<button type="submit">Mettre à jour</button>
+									<button type="submit" name="submit__information">Mettre à jour</button>
 								</form>
 							</div>
 						</div>

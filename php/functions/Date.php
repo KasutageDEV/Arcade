@@ -11,9 +11,9 @@ function formater_date($date) {
     $annees = $difference->y;
 
     if ($annees >= 1) {
-        $prefixe = "Il y a " . $annees . "a";
+        $prefixe = "Il y a " . $annees . " ans";
     } elseif ($jours > 1) {
-        $prefixe = "Il y a " . $jours . "j";
+        $prefixe = "Il y a " . $jours . " jours";
     } elseif ($jours == 1) {
         $prefixe = "Hier";
     } elseif ($heures >= 1 || $minutes >= 1) {

@@ -2,7 +2,6 @@
 					<h1>Logs</h1>
 
 					<?php
-					require('../php/functions/Date.php');
 					$logs = $bdd->query('SELECT * FROM logs ORDER BY date DESC LIMIT 50');
 					while($logs_infos = $logs->fetch()) {
 						$userLogs = $bdd->prepare('SELECT * FROM users WHERE id = ?');

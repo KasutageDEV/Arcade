@@ -62,7 +62,18 @@
 				<p>Dédicaces :</p>
 				<img src="./assets/imgs/dedicace.svg">
 			</div>
-			<marquee><span><b>Kasutage :</b> Ma dédicaces !</span></marquee>
+			<marquee>
+				<?php
+				$dedi = $bdd->prepare('SELECT * FROM dedicaces WHERE etat = ?');
+				$dedi->execute(array(2));
+				while($dedi_infos = $dedi->fetch()) {
+					$user = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+					$user->execute(array($dedi_infos->user_id));
+					$user_infos = $user->fetch();
+				?>
+				<span><b><?= $user_infos->username; ?> :</b> <?= $dedi_infos->message; ?></span>
+				<?php } ?>
+			</marquee>
 		</div>
 	</div>
 

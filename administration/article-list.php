@@ -1,5 +1,33 @@
 <?php
+require('../global.php');
+require('../php/functions/Date.php');
 $page = 'article-list';
+
+if(!isset($_SESSION['id'])) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+$verifPage = $bdd->prepare('SELECT * FROM users_staffs WHERE user_id = ?');
+$verifPage->execute(array($session_infos->id));
+$verifPage_infos = $verifPage->fetch();
+
+if($verifPage->rowCount() == 0 OR $verifPage_infos->page_articleList == 0) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+if(isset($_POST['submit__article'])) {
+	$id 	= intval($_POST['article_id']);
+	$date 	= date('d-m-Y H:i:s');
+
+	$delete = $bdd->prepare('DELETE FROM articles WHERE id = ?');
+	$delete->execute(array($id));
+
+	$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+	$logs->execute(array($session_infos->id, 'à supprimer un article', $date));
+	$validate = 'L\'article à bien été supprimer';
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -38,38 +66,51 @@ $page = 'article-list';
 			<?php require('./models/header.php'); ?>
 			<div class="dashboard__body">
 				<div class="dashboard__content">
+					<?php if(isset($validate)) { ?>
+					<div class="alert success"><?= $validate; ?></div>
+					<?php } ?>
 					<div class="article__table">
 						<table id="example" style="width:100%">
 					        <thead>
 					            <tr>
-					                <th>Name</th>
-					                <th>Position</th>
-					                <th>Office</th>
-					                <th>Age</th>
-					                <th>Start date</th>
-					                <th>Salary</th>
+					                <th>Titre</th>
+					                <th>Auteur</th>
+					                <th>Correcteur</th>
+					                <th>Valider par</th>
+					                <th>État</th>
+					                <th>Date</th>
+					                <th></th>
 					            </tr>
 					        </thead>
 					        <tbody>
+					        	<?php
+					        	$article = $bdd->query('SELECT * FROM articles');
+					        	while($article_infos = $article->fetch()) {
+					        	?>
 					            <tr>
-					                <td>Tiger Nixon</td>
-					                <td>System Architect</td>
-					                <td>Edinburgh</td>
-					                <td>61</td>
-					                <td>2011-04-25</td>
-					                <td>$320,800</td>
+					                <td><?= $article_infos->titre; ?></td>
+					                <td><?= $article_infos->author; ?></td>
+					                <td><?= $article_infos->corrector; ?></td>
+					                <td><?= $article_infos->validator; ?></td>
+					                <td>
+					                	<?php if($article_infos->etat == 1) { ?>
+					                		<span class="badge warning">En attente de correction</span>
+					                	<?php } if($article_infos->etat == 2) { ?>
+					                		<span class="badge danger">En attente de validation</span>
+					                	<?php } if($article_infos->etat == 3) { ?>
+					                		<span class="badge success">En ligne</span>
+					                	<?php } ?>
+					                </td>
+					                <td><?= formater_date($article_infos->date_post); ?></td>
+					                <td>
+					                	<form method="POST" action="">
+					                		<input type="hidden" name="article_id" value="<?= $article_infos->id; ?>">
+					                		<button type="submit" name="submit__article" class="article__submit red">Supprimer</button>
+					                	</form>
+					                </td>
 					            </tr>
+					        	<?php } ?>
 					        </tbody>
-					        <tfoot>
-					            <tr>
-					                <th>Name</th>
-					                <th>Position</th>
-					                <th>Office</th>
-					                <th>Age</th>
-					                <th>Start date</th>
-					                <th>Salary</th>
-					            </tr>
-					        </tfoot>
 					    </table>
 					</div>
 				</div>

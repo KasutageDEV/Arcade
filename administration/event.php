@@ -1,5 +1,89 @@
 <?php
+require('../global.php');
+require('../php/functions/Date.php');
 $page = 'event';
+
+if(!isset($_SESSION['id'])) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+$verifPage = $bdd->prepare('SELECT * FROM users_staffs WHERE user_id = ?');
+$verifPage->execute(array($session_infos->id));
+$verifPage_infos = $verifPage->fetch();
+
+if($verifPage->rowCount() == 0 OR $verifPage_infos->page_event == 0) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+if(isset($_POST['submit__event'])) {
+	if(!empty($_POST['titre']) AND !empty($_POST['author']) AND !empty($_POST['tag']) AND !empty($_POST['link'])) {
+
+		$titre 	= htmlspecialchars($_POST['titre']);
+		$author = htmlspecialchars($_POST['author']);
+		$tag 	= htmlspecialchars($_POST['tag']);
+		$link 	= htmlspecialchars($_POST['link']);
+		$date 	= date('d-m-Y H:i:s');
+
+		if(strlen($titre) <= 255) {
+			if(isset($_FILES['image'])) {
+				$tmpName = $_FILES['image']['tmp_name'];
+                $name = $_FILES['image']['name'];
+                $size = $_FILES['image']['size'];
+                $error1 = $_FILES['image']['error'];
+
+                $tabExtension = explode('.', $name);
+                $extension = strtolower(end($tabExtension));
+
+                $extensions = ['jpg', 'png', 'jpeg', 'gif'];
+                $maxSize = 400000;
+
+                if(in_array($extension, $extensions) && $size <= $maxSize && $error1 == 0){
+
+                    $uniqueName = uniqid('', true);
+                    //uniqid génère quelque chose comme ca : 5f586bf96dcd38.73540086
+                    $file = $uniqueName.".".$extension;
+                    //$file = 5f586bf96dcd38.73540086.jpg
+
+                    if(move_uploaded_file($tmpName, '../imagesEvent/'.$file)) {
+                        $insert = $bdd->prepare('INSERT INTO event(user_id, author, tag, image, link, date) VALUES(?, ?, ?, ?, ?, ?)');
+                        $insert->execute(array($session_infos->id, $author, $tag, $file, $link, $date));
+
+                        $logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+                        $logs->execute(array($session_infos->id, 'à publier un event', $date));
+
+                        $validate = 'Event publié avec succès !';
+                    } else {
+                        $erreur = 'Une erreur est survenue';
+                    }
+                } else{
+                    $error = "Une erreur est survenue";
+                }
+			} else {
+				$erreur = 'Vous devez upload une image !';
+			}
+		} else {
+			$erreur = 'Le titre ne peut dépasser 255 caractères !';
+		}
+	} else {
+		$erreur = 'Vous devez remplir tous les champs !';
+	}
+}
+
+if(isset($_POST['submit__delete'])) {
+
+	$id 	= intval($_POST['event_id']);
+	$date 	= date('d-m-Y H:i:s');
+
+	$delete = $bdd->prepare('DELETE FROM event WHERE id = ?');
+	$delete->execute(array($id));
+
+	$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+    $logs->execute(array($session_infos->id, 'à supprimer un event', $date));
+
+	$validate = 'Vous avez bien supprimer un event !';
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -40,16 +124,21 @@ $page = 'event';
 			<?php require('./models/header.php'); ?>
 			<div class="dashboard__body">
 				<div class="dashboard__content">
+					<?php if(isset($validate)) { ?>
+					<div class="alert success"><?= $validate; ?></div>
+					<?php } if(isset($erreur)) { ?>
+					<div class="alert danger"><?= $erreur; ?></div>
+					<?php } ?>
 					<div class="row">
 						<div class="col-lg-4 col-md-6 col-sm-12">
-							<form method="POST" action="">
-								<div class="article__group" style="margin-top: 20px;">
+							<form method="POST" action="" enctype="multipart/form-data">
+								<div class="article__group">
 									<label>Titre</label>
 									<input type="text" name="titre" placeholder="Titre" class="article__input">
 								</div>
 								<div class="article__group">
 									<label>Auteur</label>
-									<input type="text" name="description" placeholder="Description" class="article__input">
+									<input type="text" name="author" placeholder="Auteur" class="article__input">
 								</div>
 								<div class="article__group">
 									<label>Tag</label>
@@ -61,9 +150,9 @@ $page = 'event';
 								</div>
 								<div class="article__group">
 									<label>Lien vers l'article HC</label>
-									<input type="text" name="lien" placeholder="Lien" class="article__input">
+									<input type="url" name="link" placeholder="Lien" class="article__input">
 								</div>
-								<button type="submit" name="submit__article" class="article__submit">Valider</button>
+								<button type="submit" name="submit__event" class="article__submit">Valider</button>
 							</form>
 						</div>
 						<div class="col-lg-8 col-md-6 col-sm-12">
@@ -78,17 +167,25 @@ $page = 'event';
 							            </tr>
 							        </thead>
 							        <tbody>
+							        	<?php
+							        	$event = $bdd->query('SELECT * FROM event');
+							        	while($event_infos = $event->fetch()) {
+							        		$userE = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+							        		$userE->execute(array($event_infos->user_id));
+							        		$userE_infos = $userE->fetch();
+							        	?>
 							            <tr>
-							                <td>Titre de l'article</td>
-							                <td>Kaana</td>
-							                <td>Anubis</td>
+							                <td><?= $event_infos->titre; ?></td>
+							                <td><?= $event_infos->author; ?></td>
+							                <td><?= $userE_infos->username; ?></td>
 							                <td>
 							                	<form method="POST" action="">
-							                		<input type="hidden" name="event_id" value="0">
-						                			<button type="submit" class="article__submit red">Supprimer</button>
+							                		<input type="hidden" name="event_id" value="<?= $event_infos->id; ?>">
+						                			<button type="submit" name="submit__delete" class="article__submit red">Supprimer</button>
 							                	</form>
 							                </td>
 							            </tr>
+							        	<?php } ?>
 							        </tbody>
 							    </table>
 							</div>

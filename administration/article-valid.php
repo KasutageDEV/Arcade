@@ -1,5 +1,6 @@
 <?php
 require('../global.php');
+require('../php/functions/Date.php');
 $page = 'article-valid';
 
 if(!isset($_SESSION['id'])) {

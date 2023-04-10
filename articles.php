@@ -52,27 +52,36 @@ $page = 'articles';
 
 	<div class="container">
 		<div class="row">
+			<?php
+			$currentDate = date('d-m-Y H:i:s');
+			$last_news = $bdd->prepare('SELECT * FROM articles WHERE date_publication >= ? AND etat = ? ORDER BY date_publication DESC LIMIT 3');
+			$last_news->execute(array($currentDate, 3));
+			while($last_news_infos = $last_news->fetch()) {
+			?>
 			<div class="col-lg-4 col-md-6 col-sm-12">
-				<a href="#" class="article">
+				<a href="./articles_view?id=<?= $last_news_infos->id; ?>" class="article">
 					<div class="row d-flex align-items-center">
 						<div class="col-lg-12 col-md-12 col-sm-12">
-							<img src="https://cdn.wibbo.org/web-promo/lpromo_1505_hosp.png" class="article__img">
+							<img src="./imagesArticle/<?= $last_news_infos->image; ?>" class="article__img">
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-12 p-4">
-							<h1 class="article__title">Titre de l'article</h1>
-							<h2 class="article__subtitle">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h2>
+							<h1 class="article__title"><?= $last_news_infos->titre; ?></h1>
+							<h2 class="article__subtitle"><?= $last_news_infos->description; ?></h2>
 							<div class="article__infos">
 								<img src="./assets/imgs/emojis/one-oclock_1f550.png">
-								<p>Il y a <span>2j</span></p>
+								<p><span><?= formater_date($last_news_infos->date_post); ?></span></p>
 							</div>
 							<div class="article__infos">
 								<img src="./assets/imgs/emojis/black-nib_2712-fe0f.png">
-								<p>Écrit par <span>Kasutage</span></p>
+								<p>Écrit par <span><?= $last_news_infos->author; ?></span></p>
 							</div>
 						</div>
 					</div>
 				</a>
 			</div>
+			<?php } if($last_news->rowCount() == 0) { ?>
+				<center>Aucun article pour le moment !</center>
+			<?php } ?>
 		</div>
 	</div>
 

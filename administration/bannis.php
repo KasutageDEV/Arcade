@@ -1,5 +1,37 @@
 <?php
+require('../global.php');
+require('../php/functions/Date.php');
 $page = 'bannis';
+
+if(!isset($_SESSION['id'])) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+$verifPage = $bdd->prepare('SELECT * FROM users_staffs WHERE user_id = ?');
+$verifPage->execute(array($session_infos->id));
+$verifPage_infos = $verifPage->fetch();
+
+if($verifPage->rowCount() == 0 OR $verifPage_infos->page_bannis == 0) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+if(isset($_POST['submit__deban'])) {
+	$user_id 	= intval($_POST['user_id']);
+	$date 		= date('d-m-Y H:i:s');
+
+	$deban = $bdd->prepare('UPDATE users SET is_ban = ? WHERE id = ?');
+	$deban->execute(array(0, $user_id));
+
+	$delete = $bdd->prepare('DELETE FROM bans WHERE user_id = ?');
+	$delete->execute(array($user_id));
+
+	$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+    $logs->execute(array($session_infos->id, 'à débannis un membre', $date));
+
+    $validate = 'Vous avez bien débannis un membre';
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -40,64 +72,44 @@ $page = 'bannis';
 			<?php require('./models/header.php'); ?>
 			<div class="dashboard__body">
 				<div class="dashboard__content">
-					<div class="row">
-						<div class="col-lg-4 col-md-6 col-sm-12">
-							<form method="POST" action="">
-								<div class="article__group" style="margin-top: 20px;">
-									<label>Pseudo</label>
-									<input type="text" name="titre" placeholder="Pseudo" class="article__input">
-								</div>
-								<div class="article__group" style="margin-top: 20px;">
-									<label>Raison</label>
-									<input type="text" name="reason" placeholder="Raison" class="article__input">
-								</div>
-								<div class="article__group">
-									<label>Durée</label>
-									<select name="type" class="article__input">
-										<option value="1">1 Heure</option>
-										<option value="2">2 Heures</option>
-										<option value="3">1 Jour</option>
-										<option value="3">2 Jours</option>
-										<option value="3">1 Mois</option>
-										<option value="3">2 Mois</option>
-										<option value="3">1 An</option>
-										<option value="3">2 Ans</option>
-									</select>
-								</div>
-								<button type="submit" name="submit__article" class="article__submit">Valider</button>
-							</form>
-						</div>
-						<div class="col-lg-8 col-md-6 col-sm-12">
-							<div class="article__table">
-								<table id="example" style="width:100%">
-							        <thead>
-							            <tr>
-							                <th>Pseudo</th>
-							                <th>Raison</th>
-							                <th>Ban par</th>
-							                <th>Durée</th>
-							                <th>Date</th>
-							                <th></th>
-							            </tr>
-							        </thead>
-							        <tbody>
-							            <tr>
-							                <td>Kaana</td>
-							                <td>Insultes</td>
-							                <td>Anubis</td>
-							                <td>1 Heure</td>
-							                <td>04/04/2023 à 11:34</td>
-							                <td>
-							                	<form method="POST" action="">
-							                		<input type="hidden" name="event_id" value="0">
-						                			<button type="submit" class="article__submit red">Débannir</button>
-							                	</form>
-							                </td>
-							            </tr>
-							        </tbody>
-							    </table>
-							</div>
-						</div>
+					<?php if(isset($validate)) { ?>
+					<div class="alert success"><?= $validate; ?></div>
+					<?php } ?>
+					<div class="article__table">
+						<table id="example" style="width:100%">
+					        <thead>
+					            <tr>
+					                <th>Pseudo</th>
+					                <th>Raison</th>
+					                <th>Ban par</th>
+					                <th>Date</th>
+					                <th></th>
+					            </tr>
+					        </thead>
+					        <tbody>
+					        	<?php
+					        	$bannis = $bdd->prepare('SELECT * FROM users WHERE is_ban = ?');
+					        	$bannis->execute(array(1));
+					        	while($bannis_infos = $bannis->fetch()) {
+					        		$ban = $bdd->prepare('SELECT * FROM bans WHERE user_id = ?');
+					        		$ban->execute(array($bannis_infos->id));
+					        		$ban_infos = $ban->fetch();
+					        	?>
+					            <tr>
+					                <td><?= $bannis_infos->username; ?></td>
+					                <td><?= $ban_infos->reason; ?></td>
+					                <td><?= $ban_infos->author; ?></td>
+					                <td><?= formater_date($ban_infos->date); ?></td>
+					                <td>
+					                	<form method="POST" action="">
+					                		<input type="hidden" name="user_id" value="<?= $bannis_infos->id; ?>">
+				                			<button type="submit" name="submit__deban" class="article__submit red">Débannir</button>
+					                	</form>
+					                </td>
+					            </tr>
+					        	<?php } ?>
+					        </tbody>
+					    </table>
 					</div>
 				</div>
 				<?php require('./models/logs-bar.php'); ?>

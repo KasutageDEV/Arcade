@@ -1,5 +1,73 @@
 <?php
+require('../global.php');
+require('../php/functions/Date.php');
 $page = 'flux';
+
+if(!isset($_SESSION['id'])) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+$verifPage = $bdd->prepare('SELECT * FROM users_staffs WHERE user_id = ?');
+$verifPage->execute(array($session_infos->id));
+$verifPage_infos = $verifPage->fetch();
+
+if($verifPage->rowCount() == 0 OR $verifPage_infos->page_flux == 0) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+if(isset($_POST['submit__flux'])) {
+	if(!empty($_POST['username']) AND !empty($_POST['type']) AND !empty($_POST['new_poste']) AND !empty($_POST['badge'])) {
+
+		$username 	= htmlspecialchars($_POST['username']);
+		$type 		= intval($_POST['type']);
+		$last_poste 	= htmlspecialchars($_POST['last_poste']);
+		$new_poste 	= htmlspecialchars($_POST['new_poste']);
+		$badge 		= htmlspecialchars($_POST['badge']);
+		$date 		= date('d-m-Y H:i:s');
+
+		if(strlen($username) <= 255) {
+			if(strlen($last_poste) <= 255) {
+				if(strlen($new_poste) <= 255) {
+					if($type == '1' || $type == '2' || $type == '3') {
+						$insert = $bdd->prepare('INSERT INTO flux(user_id, pseudo, type, last_poste, new_poste, badge, date) VALUES(?, ?, ?, ?, ?, ?, ?)');
+						$insert->execute(array($session_infos->id, $username, $type, $last_poste, $new_poste, $badge, $date));
+
+						$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+                        $logs->execute(array($session_infos->id, 'à publier un flux', $date));
+
+                        $validate = 'Flux publié avec succès !';
+					} else {
+						$erreur = 'Une erreur est survenue !';
+					}
+				} else {
+					$erreur = 'Le nouveau poste ne peut dépasser 255 caractères !';
+				}
+			} else {
+				$erreur = 'L\'ancien poste ne peut dépasser 255 caractères !';
+			}
+		} else {
+			$erreur = 'Le pseudo ne peut dépasser 255 caractères !';
+		}
+	} else {
+		$erreur = 'Vous devez remplir tous les champs !';
+	}
+}
+
+if(isset($_POST['submit__delete'])) {
+
+	$id 	= intval($_POST['flux_id']);
+	$date 	= date('d-m-Y H:i:s');
+
+	$delete = $bdd->prepare('DELETE FROM flux WHERE id = ?');
+	$delete->execute(array($id));
+
+	$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+    $logs->execute(array($session_infos->id, 'à supprimer un flux', $date));
+
+	$validate = 'Vous avez bien supprimer un flux !';
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -40,15 +108,20 @@ $page = 'flux';
 			<?php require('./models/header.php'); ?>
 			<div class="dashboard__body">
 				<div class="dashboard__content">
+					<?php if(isset($validate)) { ?>
+					<div class="alert success"><?= $validate; ?></div>
+					<?php } if(isset($erreur)) { ?>
+					<div class="alert danger"><?= $erreur; ?></div>
+					<?php } ?>
 					<div class="row">
 						<div class="col-lg-4 col-md-6 col-sm-12">
 							<form method="POST" action="">
-								<div class="article__group" style="margin-top: 20px;">
+								<div class="article__group">
 									<label>Pseudo</label>
-									<input type="text" name="titre" placeholder="Titre" class="article__input">
+									<input type="text" name="username" placeholder="Pseudo" class="article__input">
 								</div>
 								<div class="article__group">
-									<label>Auteur</label>
+									<label>Type</label>
 									<select name="type" class="article__input">
 										<option value="1">Arrivée</option>
 										<option value="2">Départ</option>
@@ -60,14 +133,14 @@ $page = 'flux';
 									<input type="text" name="last_poste" placeholder="Ancien poste" class="article__input">
 								</div>
 								<div class="article__group">
-									<label>Nouveau post</label>
+									<label>Nouveau poste</label>
 									<input type="text" name="new_poste" placeholder="Nouveau poste" class="article__input">
 								</div>
 								<div class="article__group">
 									<label>Badge</label>
 									<input type="text" name="badge" placeholder="Code du badge" class="article__input">
 								</div>
-								<button type="submit" name="submit__article" class="article__submit">Valider</button>
+								<button type="submit" name="submit__flux" class="article__submit">Valider</button>
 							</form>
 						</div>
 						<div class="col-lg-8 col-md-6 col-sm-12">
@@ -83,18 +156,34 @@ $page = 'flux';
 							            </tr>
 							        </thead>
 							        <tbody>
+							        	<?php
+							        	$flux = $bdd->query('SELECT * FROM flux');
+							        	while($flux_infos = $flux->fetch()) {
+							        		$userF = $bdd->prepare('SELECT * FROM users WHERE id = ?');
+							        		$userF->execute(array($flux_infos->user_id));
+							        		$userF_infos = $userF->fetch();
+							        	?>
 							            <tr>
-							                <td>Kaana</td>
-							                <td>Arrivée</td>
-							                <td>Anubis</td>
-							                <td>04/04/2023 à 11:34</td>
+							                <td><?= $flux_infos->pseudo; ?></td>
+							                <td>
+							                	<?php if($flux_infos->type == 1) { ?>
+							                		Arrivée
+							                	<?php } if($flux_infos->type == 2) { ?>
+							                		Départ
+							                	<?php } if($flux_infos->type == 3) { ?>
+							                		Changement de poste
+							                	<?php } ?>
+							                </td>
+							                <td><?= $userF_infos->username; ?></td>
+							                <td><?= formater_date($flux_infos->date); ?></td>
 							                <td>
 							                	<form method="POST" action="">
-							                		<input type="hidden" name="event_id" value="0">
-						                			<button type="submit" class="article__submit red">Supprimer</button>
+							                		<input type="hidden" name="flux_id" value="<?= $flux_infos->id; ?>">
+						                			<button type="submit" name="submit__delete" class="article__submit red">Supprimer</button>
 							                	</form>
 							                </td>
 							            </tr>
+							        	<?php } ?>
 							        </tbody>
 							    </table>
 							</div>

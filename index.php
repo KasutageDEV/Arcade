@@ -1,5 +1,6 @@
 <?php
 require('global.php');
+require('./php/functions/Date.php');
 $page = 'index';
 ?>
 <!DOCTYPE html>
@@ -60,21 +61,30 @@ $page = 'index';
 						<img src="./assets/imgs/emojis/newspaper_1f4f0.png">
 						<h1>Derniers articles</h1>
 					</div>
+					<?php
+					$currentDate = date('d-m-Y H:i:s');
+					$last_news = $bdd->prepare('SELECT * FROM articles WHERE date_publication >= ? AND etat = ? ORDER BY date_publication DESC LIMIT 3');
+					$last_news->execute(array($currentDate, 3));
+					while($last_news_infos = $last_news->fetch()) {
+					?>
 					<div class="last-news">
-						<img src="https://cdn.wibbo.org/web-promo/lpromo_1505_hosp.png" class="last-news__img">
+						<img src="./imagesArticle/<?= $last_news_infos->image; ?>" class="last-news__img">
 						<div class="last-news__content">
-							<h1>Titre de l'article</h1>
-							<h2>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</h2>
+							<h1><?= $last_news_infos->titre; ?></h1>
+							<h2><?= $last_news_infos->description; ?></h2>
 							<div class="last-news__infos">
 								<img src="./assets/imgs/emojis/one-oclock_1f550.png">
-								<p>Il y a <span>2j</span></p>
+								<p><span><?= formater_date($last_news_infos->date_post); ?></span></p>
 							</div>
 							<div class="last-news__infos">
 								<img src="./assets/imgs/emojis/black-nib_2712-fe0f.png">
-								<p>Écrit par <span>Kasutage</span></p>
+								<p>Écrit par <span><?= $last_news_infos->author; ?></span></p>
 							</div>
 						</div>
 					</div>
+					<?php } if($last_news->rowCount() == 0) { ?>
+						<center>Aucun article publié pour le moment !</center>
+					<?php } ?>
 				</div>
 				<!-- ARTICLE HABBOCITY -->
 				<div class="bloc">
@@ -83,18 +93,25 @@ $page = 'index';
 						<h1>À suivre sur HabboCity</h1>
 					</div>
 					<div class="row">
+						<?php
+						$last_event = $bdd->query('SELECT * FROM event');
+						while($last_event_infos = $last_event->fetch()) {
+						?>
 						<div class="col-lg-4 col-md-6 col-sm-12">
-							<div class="news-hc" style="background-image: url('https://cdn.wibbo.org/web-promo/lpromo_1505_hosp.png');">
+							<div class="news-hc" style="background-image: url('./imagesEvent/<?= $last_event_infos->image; ?>');">
 								<div class="news-hc__bg"></div>
 								<div class="news-hc__zindex">
-									<div class="news-hc__badge"># Jeu</div>
-									<h1>Titre de l'article</h1>
-									<h2>Publié par <span>Newart</span></h2>
-									<a href="#">Voir l'article</a>
+									<div class="news-hc__badge"># <?= $last_event_infos->tag; ?></div>
+									<h1><?= $last_event_infos->titre; ?></h1>
+									<h2>Publié par <span><?= $last_event_infos->author; ?></span></h2>
+									<a href="<?= $last_event_infos->link; ?>">Voir l'article</a>
 								</div>
-								<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n">
+								<img src="https://api.habbocity.me/avatar_image.php?user=<?= $last_event_infos->author; ?>&headonly=0&direction=2&head_direction=2&size=n">
 							</div>
 						</div>
+						<?php } if($last_event->rowCount() == 0) { ?>
+							<center>Aucun event publié pour le moment !</center>
+						<?php } ?>
 					</div>
 				</div>
 			</div>
@@ -119,16 +136,32 @@ $page = 'index';
 						<img src="./assets/imgs/emojis/trophy_1f3c6.png">
 						<h1>Top gamer</h1>
 					</div>
+					<?php
+					$top_gamer = $bdd->prepare('SELECT * FROM users WHERE points_gamer >= ? ORDER BY points_gamer DESC LIMIT 3');
+					$top_gamer->execute(array(1));
+					$count = 0;
+					while($top_gamer_infos = $top_gamer->fetch()) {
+						$count = $count + 1;
+					?>
 					<div class="user-list">
 						<div class="user-list__profil">
+							<?php if($count == 1) { ?>
 							<img src="./assets/imgs/emojis/1st-place-medal_1f947.png" class="user-list__place">
+							<?php } elseif($count == 2) { ?>
+							<img src="./assets/imgs/emojis/2nd-place-medal_1f948.png" class="user-list__place">
+							<?php } elseif($count == 3) { ?>
+							<img src="./assets/imgs/emojis/3rd-place-medal_1f949.png" class="user-list__place">
+							<?php } ?>
 							<div class="user-list__avatar">
-								<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+								<img src="https://api.habbocity.me/avatar_image.php?user=<?= $top_gamer_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 							</div>
-							<p>Kaana</p>
+							<p><?= $top_gamer_infos->username; ?></p>
 						</div>
-						<div class="user-list__info"><span>150</span> Points</div>
+						<div class="user-list__info"><span><?= $top_gamer_infos->points_gamer; ?></span> Points</div>
 					</div>
+					<?php } if($top_gamer->rowCount() == 0) { ?>
+						<center>Personne pour le moment !</center>
+					<?php } ?>
 				</div>
 				<!-- Dernier inscrits -->
 				<div class="bloc">
@@ -136,15 +169,22 @@ $page = 'index';
 						<img src="./assets/imgs/emojis/waving-hand_1f44b.png">
 						<h1>Derniers inscrits</h1>
 					</div>
+					<?php
+					$last_user = $bdd->query('SELECT * FROM users ORDER BY id DESC LIMIT 5');
+					while($last_user_infos = $last_user->fetch()) {
+					?>
 					<div class="user-list">
 						<div class="user-list__profil">
 							<div class="user-list__avatar">
-								<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+								<img src="https://api.habbocity.me/avatar_image.php?user=<?= $last_user_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 							</div>
-							<p>Kaana</p>
+							<p><?= $last_user_infos->username; ?></p>
 						</div>
-						<div class="user-list__info">Il y a <span>2j</span></div>
+						<div class="user-list__info"><span><?= formater_date($last_user_infos->date_register); ?></span></div>
 					</div>
+					<?php } if($last_user->rowCount() == 0) { ?>
+						<center>Personne n'est inscrit sur Arcade !</center>
+					<?php } ?>
 				</div>
 			</div>
 		</div>

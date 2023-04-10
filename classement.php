@@ -59,16 +59,32 @@ $page = 'classement';
 						<img src="./assets/imgs/emojis/video-game_1f3ae.png">
 						<h1>Top gamer</h1>
 					</div>
+					<?php
+					$top_gamer = $bdd->prepare('SELECT * FROM users WHERE points_gamer >= ? ORDER BY points_gamer DESC LIMIT 3');
+					$top_gamer->execute(array(1));
+					$count = 0;
+					while($top_gamer_infos = $top_gamer->fetch()) {
+						$count = $count + 1;
+					?>
 					<div class="user-list">
 						<div class="user-list__profil">
+							<?php if($count == 1) { ?>
 							<img src="./assets/imgs/emojis/1st-place-medal_1f947.png" class="user-list__place">
+							<?php } elseif($count == 2) { ?>
+							<img src="./assets/imgs/emojis/2nd-place-medal_1f948.png" class="user-list__place">
+							<?php } elseif($count == 3) { ?>
+							<img src="./assets/imgs/emojis/3rd-place-medal_1f949.png" class="user-list__place">
+							<?php } ?>
 							<div class="user-list__avatar">
-								<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+								<img src="https://api.habbocity.me/avatar_image.php?user=<?= $top_gamer_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 							</div>
-							<p>Kaana</p>
+							<p><?= $top_gamer_infos->username; ?></p>
 						</div>
-						<div class="user-list__info"><span>150</span> Points</div>
+						<div class="user-list__info"><span><?= $top_gamer_infos->points_gamer; ?></span> Points</div>
 					</div>
+					<?php } if($top_gamer->rowCount() == 0) { ?>
+						<center>Personne pour le moment !</center>
+					<?php } ?>
 				</div>
 			</div>
 			<!-- TOP RICHESSE -->
@@ -78,16 +94,32 @@ $page = 'classement';
 						<img src="./assets/imgs/emojis/money-bag_1f4b0.png">
 						<h1>Top Richesse</h1>
 					</div>
+					<?php
+					$top_gamer = $bdd->prepare('SELECT * FROM users WHERE arcade_coins >= ? ORDER BY arcade_coins DESC LIMIT 3');
+					$top_gamer->execute(array(1));
+					$count = 0;
+					while($top_gamer_infos = $top_gamer->fetch()) {
+						$count = $count + 1;
+					?>
 					<div class="user-list">
 						<div class="user-list__profil">
+							<?php if($count == 1) { ?>
 							<img src="./assets/imgs/emojis/1st-place-medal_1f947.png" class="user-list__place">
+							<?php } elseif($count == 2) { ?>
+							<img src="./assets/imgs/emojis/2nd-place-medal_1f948.png" class="user-list__place">
+							<?php } elseif($count == 3) { ?>
+							<img src="./assets/imgs/emojis/3rd-place-medal_1f949.png" class="user-list__place">
+							<?php } ?>
 							<div class="user-list__avatar">
-								<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
+								<img src="https://api.habbocity.me/avatar_image.php?user=<?= $top_gamer_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
 							</div>
-							<p>Kaana</p>
+							<p><?= $top_gamer_infos->username; ?></p>
 						</div>
-						<div class="user-list__info"><span>150</span> Points</div>
+						<div class="user-list__info"><span><?= $top_gamer_infos->arcade_coins; ?></span> ArcadeCoins</div>
 					</div>
+					<?php } if($top_gamer->rowCount() == 0) { ?>
+						<center>Personne pour le moment !</center>
+					<?php } ?>
 				</div>
 			</div>
 			<!-- TOP BADGES -->

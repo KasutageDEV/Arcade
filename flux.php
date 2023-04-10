@@ -53,34 +53,61 @@ $page = 'flux';
 	
 	<div class="container">
 		<div class="row">
+			<?php
+			$flux = $bdd->query('SELECT * FROM flux ORDER BY id DESC');
+			while($flux_infos = $flux->fetch()) {
+			?>
 			<div class="col-lg-3 col-md-6 col-sm-12">
 				<div class="flux">
 					<div class="flux__info">
 						<div class="flux__user">
 							<div class="flux__avatar">
-								<img src="https://api.habbocity.me/avatar_image.php?user=Kaana&headonly=0&direction=2&head_direction=2&size=n">
+								<img src="https://api.habbocity.me/avatar_image.php?user=<?= $flux_infos->pseudo; ?>&headonly=0&direction=2&head_direction=2&size=n">
 							</div>
 							<div class="flux__pseudo">
-								<h1>Kaana</h1>
-								<h2 class="success">Arrivée</h2>
+								<h1><?= $flux_infos->pseudo; ?></h1>
+								<?php if($flux_infos->type == 1) { ?>
+									<h2 class="success">Arrivée</h2>
+								<?php } if($flux_infos->type == 2) { ?>
+									<h2 class="danger">Départ</h2>
+								<?php } if($flux_infos->type == 3) { ?>
+									<h2 class="warning">Changement de poste</h2>
+								<?php } ?>
 							</div>
 						</div>
-						<img src="./assets/imgs/staffs-hc/adm.gif">
+						<img src="./assets/imgs/staffs-hc/<?= $flux_infos->badge; ?>.gif">
 					</div>
-					<div class="flux__update">
-						<div class="flux__icon danger">
-							<i class="fas fa-arrow-left"></i>
+					<?php if($flux_infos->type == 1) { ?>
+						<div class="flux__update">
+							<div class="flux__icon success">
+								<i class="fas fa-arrow-right"></i>
+							</div>
+							<p><?= $flux_infos->new_poste; ?></p>
 						</div>
-						<p>Fondateur</p>
-					</div>
-					<div class="flux__update">
-						<div class="flux__icon success">
-							<i class="fas fa-arrow-right"></i>
+					<?php } if($flux_infos->type == 2) { ?>
+						<div class="flux__update">
+							<div class="flux__icon danger">
+								<i class="fas fa-arrow-left"></i>
+							</div>
+							<p><?= $flux_infos->last_poste; ?></p>
 						</div>
-						<p>Développeur</p>
-					</div>
+					<?php } if($flux_infos->type == 3) { ?>
+						<div class="flux__update">
+							<div class="flux__icon danger">
+								<i class="fas fa-arrow-left"></i>
+							</div>
+							<p><?= $flux_infos->last_poste; ?></p>
+						</div>
+						<div class="flux__update">
+							<div class="flux__icon success">
+								<i class="fas fa-arrow-right"></i>
+							</div>
+							<p><?= $flux_infos->new_poste; ?></p>
+						</div>
+					<?php } ?>
 				</div>
 			</div>
+			<?php } ?>
 		</div>
 	</div>
 
