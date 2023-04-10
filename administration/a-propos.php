@@ -1,5 +1,38 @@
 <?php
+require('../global.php');
+require('../php/functions/Date.php');
 $page = 'a-propos';
+
+if(!isset($_SESSION['id'])) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+$verifPage = $bdd->prepare('SELECT * FROM users_staffs WHERE user_id = ?');
+$verifPage->execute(array($session_infos->id));
+$verifPage_infos = $verifPage->fetch();
+
+if($verifPage->rowCount() == 0 OR $verifPage_infos->page_apropos == 0) {
+	header('Location: '.$website_infos->link.'/index');
+	exit();
+}
+
+if(isset($_POST['submit__apropos'])) {
+	if(!empty($_POST['contenu'])) {
+		$contenu 	= htmlspecialchars($_POST['contenu']);
+		$date 		= date('d-m-Y H:i:s');
+
+		$update = $bdd->prepare('UPDATE settings SET a_propos = ?');
+		$update->execute(array($contenu));
+
+		$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+        $logs->execute(array($session_infos->id, 'à modifier la page à propos', $date));
+
+        $validate = 'Vous avez bien mis à jour la page à propos !';
+	} else {
+		$erreur = 'La page à propos ne peux pas être vide !';
+	}
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -37,9 +70,14 @@ $page = 'a-propos';
 			<?php require('./models/header.php'); ?>
 			<div class="dashboard__body">
 				<div class="dashboard__content">
+					<?php if(isset($validate)) { ?>
+					<div class="alert success"><?= $validate; ?></div>
+					<?php } if(isset($erreur)) { ?>
+					<div class="alert danger"><?= $erreur; ?></div>
+					<?php } ?>
 					<form method="POST" action="">
-						<textarea id="article-add" class="article__textarea" rows="15" name="contenu"></textarea>
-						<button type="submit" name="submit__article" class="article__submit" style="margin-top: 20px;">Modifier</button>
+						<textarea id="article-add" class="article__textarea" rows="15" name="contenu"><?= $website_infos->a_propos; ?></textarea>
+						<button type="submit" name="submit__apropos" class="article__submit" style="margin-top: 20px;">Modifier</button>
 					</form>
 				</div>
 				<?php require('./models/logs-bar.php'); ?>
