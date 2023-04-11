@@ -72,7 +72,7 @@ if(isset($_POST['submit__dedicace'])) {
 			<div class="col-lg-8 col-md-6 col-sm-12">
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/speech-balloon_1f4ac.png">
+						<img src="./assets/imgs/emojis-mt/black-nib_2712-fe0f.png">
 						<h1>Poster une dédicace</h1>
 					</div>
 					<form method="POST" action="">
@@ -83,7 +83,7 @@ if(isset($_POST['submit__dedicace'])) {
 				<!-- 10 Dernière dédicace -->
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/clipboard_1f4cb.png">
+						<img src="./assets/imgs/emojis-mt/clipboard_1f4cb.png">
 						<h1>Dernières dedicaces envoyées</h1>
 					</div>
 					<?php
@@ -110,7 +110,7 @@ if(isset($_POST['submit__dedicace'])) {
 			<div class="col-lg-4 col-md-6 col-sm-12">
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/eye-in-speech-bubble_1f441-fe0f-200d-1f5e8-fe0f.png">
+						<img src="./assets/imgs/emojis-mt/eye-in-speech-bubble_1f441-fe0f-200d-1f5e8-fe0f.png">
 						<h1>Mes dédicaces</h1>
 					</div>
 					<?php

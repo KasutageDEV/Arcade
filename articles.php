@@ -1,5 +1,6 @@
 <?php
 require('global.php');
+require('./php/functions/Date.php');
 $page = 'articles';
 ?>
 <!DOCTYPE html>
@@ -53,8 +54,8 @@ $page = 'articles';
 	<div class="container">
 		<div class="row">
 			<?php
-			$currentDate = date('d-m-Y H:i:s');
-			$last_news = $bdd->prepare('SELECT * FROM articles WHERE date_publication >= ? AND etat = ? ORDER BY date_publication DESC LIMIT 3');
+			$currentDate = date('Y-m-d H:i:s');
+			$last_news = $bdd->prepare('SELECT * FROM articles WHERE date_publication <= ? AND etat = ? ORDER BY date_publication DESC LIMIT 3');
 			$last_news->execute(array($currentDate, 3));
 			while($last_news_infos = $last_news->fetch()) {
 			?>

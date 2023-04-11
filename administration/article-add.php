@@ -142,8 +142,8 @@ if(isset($_POST['submit__article'])) {
 									<input type="file" name="image" placeholder="Image" class="article__input">
 								</div>
 								<div class="article__group">
-									<label>Programmé la publication</label>
-									<input type="date" id="date" name="publication" class="article__input">
+									<label>Programmé la publication (jj/mm/aaaa hh:mm)</label>
+									<input type="text" id="date" name="publication" class="article__input" placeholder="Format: 11/04/2023 19:30">
 								</div>
 								<button type="submit" name="submit__article" class="article__submit">Publié l'article</button>
 							</div>

@@ -52,7 +52,7 @@ $page = 'about';
 
 	<div class="container">
 		<div class="about">
-			<?= $website_infos->a_propos; ?>
+			<?= html_entity_decode($website_infos->a_propos); ?>
 		</div>
 	</div>
 

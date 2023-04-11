@@ -12,6 +12,9 @@ function headerText($page) {
 		case 'staffs':
 			echo "<h2>Rencontrez notre équipe <span>passionnée</span>, unie par la diversité de ses talents et l'ambition de transformer vos rêves en réalités.<br><span>Ensemble, nous bâtissons l'avenir.</span></h2>";
 			break;
+		case 'partenaires':
+			echo "<h2>Découvrez nos partenaires <span>précieux</span>, un réseau de collaboration et de soutien mutuel<br>Qui ensemble contribuent à façonner un avenir <span>meilleur pour tous.</span></h2>";
+			break;
 		case 'flux':
 			echo "<h2>Découvrez l'évolution dynamique de notre équipe, où chaque changement reflète notre engagement à grandir ensemble.<br><span>Et à vous offrir le meilleur de nous-mêmes.</span></h2>";
 			break;

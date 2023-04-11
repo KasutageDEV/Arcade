@@ -58,16 +58,16 @@ $page = 'index';
 				<!-- DERNIER ARTICLES -->
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/newspaper_1f4f0.png">
+						<img src="./assets/imgs/emojis-mt/newspaper_1f4f0.png">
 						<h1>Derniers articles</h1>
 					</div>
 					<?php
-					$currentDate = date('d-m-Y H:i:s');
-					$last_news = $bdd->prepare('SELECT * FROM articles WHERE date_publication >= ? AND etat = ? ORDER BY date_publication DESC LIMIT 3');
+					$currentDate = date('Y-m-d H:i:s');
+					$last_news = $bdd->prepare('SELECT * FROM articles WHERE date_publication <= ? AND etat = ? ORDER BY date_publication DESC LIMIT 3');
 					$last_news->execute(array($currentDate, 3));
 					while($last_news_infos = $last_news->fetch()) {
 					?>
-					<div class="last-news">
+					<a href="./articles_view?id=<?= $last_news_infos->id; ?>" class="last-news">
 						<img src="./imagesArticle/<?= $last_news_infos->image; ?>" class="last-news__img">
 						<div class="last-news__content">
 							<h1><?= $last_news_infos->titre; ?></h1>
@@ -81,7 +81,7 @@ $page = 'index';
 								<p>Écrit par <span><?= $last_news_infos->author; ?></span></p>
 							</div>
 						</div>
-					</div>
+					</a>
 					<?php } if($last_news->rowCount() == 0) { ?>
 						<center>Aucun article publié pour le moment !</center>
 					<?php } ?>
@@ -89,7 +89,7 @@ $page = 'index';
 				<!-- ARTICLE HABBOCITY -->
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/calendar_1f4c5.png">
+						<img src="./assets/imgs/emojis-mt/calendar_1f4c5.png">
 						<h1>À suivre sur HabboCity</h1>
 					</div>
 					<div class="row">
@@ -122,7 +122,7 @@ $page = 'index';
 				<?php if($website_infos->is_information == 1){ ?>
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/pushpin_1f4cc.png">
+						<img src="./assets/imgs/emojis-mt/pushpin_1f4cc.png">
 						<h1>Information</h1>
 					</div>
 					<div class="information__contenu">
@@ -133,7 +133,7 @@ $page = 'index';
 				<!-- Top Gamer -->
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/trophy_1f3c6.png">
+						<img src="./assets/imgs/emojis-mt/trophy_1f3c6.png">
 						<h1>Top gamer</h1>
 					</div>
 					<?php
@@ -146,11 +146,11 @@ $page = 'index';
 					<div class="user-list">
 						<div class="user-list__profil">
 							<?php if($count == 1) { ?>
-							<img src="./assets/imgs/emojis/1st-place-medal_1f947.png" class="user-list__place">
+							<img src="./assets/imgs/emojis-mt/1st-place-medal_1f947.png" class="user-list__place">
 							<?php } elseif($count == 2) { ?>
-							<img src="./assets/imgs/emojis/2nd-place-medal_1f948.png" class="user-list__place">
+							<img src="./assets/imgs/emojis-mt/2nd-place-medal_1f948.png" class="user-list__place">
 							<?php } elseif($count == 3) { ?>
-							<img src="./assets/imgs/emojis/3rd-place-medal_1f949.png" class="user-list__place">
+							<img src="./assets/imgs/emojis-mt/3rd-place-medal_1f949.png" class="user-list__place">
 							<?php } ?>
 							<div class="user-list__avatar">
 								<img src="https://api.habbocity.me/avatar_image.php?user=<?= $top_gamer_infos->username; ?>&headonly=0&direction=2&head_direction=2&size=n&headonly=1">
@@ -166,7 +166,7 @@ $page = 'index';
 				<!-- Dernier inscrits -->
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/waving-hand_1f44b.png">
+						<img src="./assets/imgs/emojis-mt/waving-hand_1f44b.png">
 						<h1>Derniers inscrits</h1>
 					</div>
 					<?php
@@ -193,7 +193,7 @@ $page = 'index';
 				<!-- Feed insta -->
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/mobile-phone_1f4f1.png">
+						<img src="./assets/imgs/emojis-mt/mobile-phone_1f4f1.png">
 						<h1>Feed Instagram</h1>
 					</div>
 					<center>Bientôt disponible</center>

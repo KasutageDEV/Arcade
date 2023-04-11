@@ -56,7 +56,7 @@ $page = 'classement';
 			<div class="col-lg-6 col-md-12 col-sm-12">
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/video-game_1f3ae.png">
+						<img src="./assets/imgs/emojis-mt/video-game_1f3ae.png">
 						<h1>Top gamer</h1>
 					</div>
 					<?php
@@ -91,7 +91,7 @@ $page = 'classement';
 			<div class="col-lg-6 col-md-12 col-sm-12">
 				<div class="bloc">
 					<div class="bloc__title">
-						<img src="./assets/imgs/emojis/money-bag_1f4b0.png">
+						<img src="./assets/imgs/emojis-mt/money-bag_1f4b0.png">
 						<h1>Top Richesse</h1>
 					</div>
 					<?php

@@ -69,3 +69,57 @@
 .article__infos p span {
 	font-weight: bold;
 }
+
+.articleView__title {
+	color: #333;
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+
+.articleView__subtitle {
+	color: #333;
+	font-size: 18px;
+	font-weight: 400;
+	margin-bottom: 20px;
+}
+
+.articleView__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+.articleView__head ul {
+	list-style: none;
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.articleView__head ul li:first-child {
+	min-width: 80px;
+}
+
+.articleView__head ul li a {
+	color: #c5ccd6;
+	font-size: 25px;
+	transition: all .2s ease-in-out;
+}
+
+.articleView__head ul li a:hover {
+	color: #69707a;
+}
+
+.articleView__autor {
+	display: flex;
+	align-items: center;
+}
+
+.articleView__illustration {
+	width: 100%;
+	height: 200px;
+	border-radius: 6px;
+	background-size: cover;
+	margin-bottom: 50px;
+}

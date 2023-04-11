@@ -11,7 +11,7 @@
 						</div>
 						<div class="header__infos">
 							<p><?= $session_infos->username; ?></p>
-							<p><?= $motto; ?></p>
+							<p><?= utf8_encode($motto); ?></p>
 						</div>
 					</div>
 				<?php } ?>
@@ -23,6 +23,7 @@
 					<ul class="submenu">
 						<li><a href="./articles">Article</a></li>
 						<li><a href="./staffs">Équipe</a></li>
+						<li><a href="./partenaires">Partenaires</a></li>
 						<li><a href="./flux">Flux</a></li>
 						<li><a href="./dedicace">Dédicaces</a></li>
 					</ul>

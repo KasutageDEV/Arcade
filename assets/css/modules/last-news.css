@@ -5,6 +5,7 @@
 	width: 100%;
 	gap: 15px;
 	margin-bottom: 20px;
+	text-decoration: none;
 }
 
 .last-news__img {
@@ -15,8 +16,14 @@
 	object-fit: cover;
 }
 
+.last-news__content {
+	color: #333;
+	text-decoration: none;
+}
+
 .last-news__content h1 {
 	font-size: 18px;
+	text-decoration: none;
 	font-weight: bold;
 }
 
@@ -25,6 +32,7 @@
 	font-weight: lighter;
 	margin-bottom: 10px;
 	text-align: justify;
+	text-decoration: none;
 }
 
 .last-news__infos {
@@ -43,6 +51,7 @@
 .last-news__infos p {
 	font-weight: lighter;
 	font-size: 14px;
+	text-decoration: none;
 }
 
 .last-news__infos p span {
