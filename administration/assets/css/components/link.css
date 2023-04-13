@@ -62,6 +62,9 @@
 .link__image.danger {background: #FFEDED;}
 .link__image.danger i {color: #FD5A5A;}
 
+.link__image.green {background: #daf7e0;}
+.link__image.green i {color: #7cd676;}
+
 .link__notif {
 	display: flex;
 	align-items: center;

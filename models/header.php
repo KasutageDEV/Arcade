@@ -11,7 +11,7 @@
 						</div>
 						<div class="header__infos">
 							<p><?= $session_infos->username; ?></p>
-							<p><?= utf8_encode($motto); ?></p>
+							<p><?= $motto; ?></p>
 						</div>
 					</div>
 				<?php } ?>

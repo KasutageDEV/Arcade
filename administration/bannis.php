@@ -75,41 +75,45 @@ if(isset($_POST['submit__deban'])) {
 					<?php if(isset($validate)) { ?>
 					<div class="alert success"><?= $validate; ?></div>
 					<?php } ?>
-					<div class="article__table">
-						<table id="example" style="width:100%">
-					        <thead>
-					            <tr>
-					                <th>Pseudo</th>
-					                <th>Raison</th>
-					                <th>Ban par</th>
-					                <th>Date</th>
-					                <th></th>
-					            </tr>
-					        </thead>
-					        <tbody>
-					        	<?php
-					        	$bannis = $bdd->prepare('SELECT * FROM users WHERE is_ban = ?');
-					        	$bannis->execute(array(1));
-					        	while($bannis_infos = $bannis->fetch()) {
-					        		$ban = $bdd->prepare('SELECT * FROM bans WHERE user_id = ?');
-					        		$ban->execute(array($bannis_infos->id));
-					        		$ban_infos = $ban->fetch();
-					        	?>
-					            <tr>
-					                <td><?= $bannis_infos->username; ?></td>
-					                <td><?= $ban_infos->reason; ?></td>
-					                <td><?= $ban_infos->author; ?></td>
-					                <td><?= formater_date($ban_infos->date); ?></td>
-					                <td>
-					                	<form method="POST" action="">
-					                		<input type="hidden" name="user_id" value="<?= $bannis_infos->id; ?>">
-				                			<button type="submit" name="submit__deban" class="article__submit red">Débannir</button>
-					                	</form>
-					                </td>
-					            </tr>
-					        	<?php } ?>
-					        </tbody>
-					    </table>
+					<div class="row">
+						<div class="col-lg-4 col-md-6 col-sm-12">
+							<div class="article__table">
+								<table id="example" style="width:100%">
+							        <thead>
+							            <tr>
+							                <th>Pseudo</th>
+							                <th>Raison</th>
+							                <th>Ban par</th>
+							                <th>Date</th>
+							                <th></th>
+							            </tr>
+							        </thead>
+							        <tbody>
+							        	<?php
+							        	$bannis = $bdd->prepare('SELECT * FROM users WHERE is_ban = ?');
+							        	$bannis->execute(array(1));
+							        	while($bannis_infos = $bannis->fetch()) {
+							        		$ban = $bdd->prepare('SELECT * FROM bans WHERE user_id = ?');
+							        		$ban->execute(array($bannis_infos->id));
+							        		$ban_infos = $ban->fetch();
+							        	?>
+							            <tr>
+							                <td><?= $bannis_infos->username; ?></td>
+							                <td><?= $ban_infos->reason; ?></td>
+							                <td><?= $ban_infos->author; ?></td>
+							                <td><?= formater_date($ban_infos->date); ?></td>
+							                <td>
+							                	<form method="POST" action="">
+							                		<input type="hidden" name="user_id" value="<?= $bannis_infos->id; ?>">
+						                			<button type="submit" name="submit__deban" class="article__submit red">Débannir</button>
+							                	</form>
+							                </td>
+							            </tr>
+							        	<?php } ?>
+							        </tbody>
+							    </table>
+							</div>
+						</div>
 					</div>
 				</div>
 				<?php require('./models/logs-bar.php'); ?>

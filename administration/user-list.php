@@ -17,13 +17,6 @@ if($verifPage->rowCount() == 0 OR $verifPage_infos->page_userList == 0) {
 	exit();
 }
 
-if(isset($_POST['submit__ban'])) {
-	$id = intval($_POST['user_id']);
-
-	$addBan = $bdd->prepare('INSERT INTO bans(user_id, reason, author, date) VALUES(?, ?, ?, ?)');
-	$addBan->execute(array($id, $re));
-}
-
 if(isset($_GET['user'])) {
 	$username = htmlspecialchars($_GET['user']);
 
@@ -32,24 +25,24 @@ if(isset($_GET['user'])) {
 	$userGET_infos = $userGET->fetch();
 }
 
-if(isset($_POST['submit__ban'])) {
-	if(!empty($_POST['username']) AND !empty($_POST['reason'])) {
-		$username 	= htmlspecialchars($_POST['username']);
-		$reason 	= htmlspecialchars($_POST['reason']);
-		$date 		= date('d-m-Y H:i:s');
+if(isset($_POST['submit__edit'])) {
+	$username = htmlspecialchars($_POST['username']);
+	$email 			= htmlspecialchars($_POST['email']);
+	$motto 			= htmlspecialchars($_POST['motto']);
+	$arcade_coins 	= intval($_POST['arcade_coins']);
+	$points_gamer 	= intval($_POST['points_gamer']);
+	$date 			= date('d-m-Y H:i:s');
 
-		$update = $bdd->prepare('UPDATE users SET is_ban = ? WHERE username = ?');
-		$update->execute(array(1, $username));
-
-		$insert = $bdd->prepare('INSERT INTO bans(user_id, reason, author, date) VALUES(?, ?, ?, ?)');
-		$insert->execute(array($userGET_infos->id, $reason, $session_infos->username, $date));
+	if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$update = $bdd->prepare('UPDATE users SET email = ?, motto = ?, arcade_coins = ?, points_gamer = ? WHERE username = ?');
+		$update->execute(array($email, $motto, $arcade_coins, $points_gamer, $username));
 
 		$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
-        $logs->execute(array($session_infos->id, 'à bannis '.$username, $date));
+        $logs->execute(array($session_infos->id, 'à modifier '.$username, $date));
 
-        $validate = 'Vous avez bien bannis '.$username;
+        $validate = 'Vous avez bien modifier '.$username;
 	} else {
-		$erreur = 'Vous devez remplir tous les champs !';
+		$erreur = 'E-mail incorrect !';
 	}
 }
 ?>
@@ -90,13 +83,10 @@ if(isset($_POST['submit__ban'])) {
 			<?php require('./models/header.php'); ?>
 			<div class="dashboard__body">
 				<div class="dashboard__content">
-					<?php if(isset($validate)) { ?>
-					<div class="alert success"><?= $validate; ?></div>
-					<?php } ?>
 					<div class="row">
-						<div class="<?php if(isset($_GET['user'])) { ?>col-lg-9<?php } else { ?>col-lg-12<?php } ?> col-md-12 col-sm-12">
-							<div class="article__table">
-								<table id="example" style="width:100%">
+						<div class="<?php if(isset($_GET['user'])) { ?>col-lg-8<?php } else { ?>col-lg-12<?php } ?> col-md-12 col-sm-12">
+							<div class="article__table" style="margin-bottom: 20px;">
+								<table id="example" style="width:100%;">
 							        <thead>
 							            <tr>
 							                <th>Pseudo</th>
@@ -115,7 +105,7 @@ if(isset($_POST['submit__ban'])) {
 							                <td><?= $user_infos->email; ?></td>
 							                <td><?= formater_date($user_infos->date_register); ?></td>
 							                <td>
-							                	<a href="?user=<?= $user_infos->username; ?>" class="article__submit red">Bannir <?= $user_infos->username; ?></a>
+							                	<a href="?user=<?= $user_infos->username; ?>" class="article__submit">Modifier <?= $user_infos->username; ?></a>
 							                </td>
 							            </tr>
 							        	<?php } ?>
@@ -124,7 +114,7 @@ if(isset($_POST['submit__ban'])) {
 							</div>
 						</div>
 						<?php if(isset($_GET['user'])) { ?>
-						<div class="col-lg-3 col-md-6 col-sm-12">
+						<div class="col-lg-4 col-md-6 col-sm-12">
 							<?php if(isset($validate)) { ?>
 							<div class="alert success"><?= $validate; ?></div>
 							<?php } if(isset($erreur)) { ?>
@@ -133,14 +123,32 @@ if(isset($_POST['submit__ban'])) {
 							<form method="POST" action="">
 								<div class="article__group">
 									<label>Pseudo</label>
-									<input type="text" name="username" value="<?= $userGET_infos->username; ?>" class="article__input" disabled>
+									<input type="text" name="username" value="<?= $userGET_infos->username; ?>" class="article__input">
 								</div>
 								<div class="article__group">
-									<label>Raison du ban</label>
-									<input type="text" name="reason" placeholder="Raison" class="article__input">
+									<label>E-mail</label>
+									<input type="email" name="email" value="<?= $userGET_infos->email; ?>" class="article__input">
 								</div>
-								<button type="submit" name="submit__ban" class="article__submit red">Bannir</button>
+								<div class="article__group">
+									<label>Motto</label>
+									<input type="text" name="motto" value="<?= $userGET_infos->motto; ?>" class="article__input">
+								</div>
+								<div class="article__group">
+									<label>Arcade Coins</label>
+									<input type="number" name="arcade_coins" value="<?= $userGET_infos->arcade_coins; ?>" class="article__input">
+								</div>
+								<div class="article__group">
+									<label>Points Gamer</label>
+									<input type="number" name="points_gamer" value="<?= $userGET_infos->points_gamer; ?>" class="article__input">
+								</div>
+								<button type="submit" name="submit__edit" class="article__submit">Modifier</button>
 							</form>
+							<div style="clear: both;"></div>
+							<ul>
+								<li>IP d'inscription : <b><?= $userGET_infos->ip_register; ?></b></li>
+								<li>Dernière IP : <b><?= $userGET_infos->ip_last; ?></b></li>
+								<li>Date d'inscription : <b><?= $userGET_infos->date_register; ?></b></li>
+							</ul>
 						</div>
 						<?php } ?>
 					</div>

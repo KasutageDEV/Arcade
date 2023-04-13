@@ -146,6 +146,13 @@ if(isset($_GET['reset-topgamer'])) {
 							</div>
 							<p>Gestion des membres</p>
 						</a>
+						<?php } if($verifPage_infos->page_partenaires == 1) { ?>
+						<a href="./partenaires" class="link">
+							<div class="link__image green">
+								<i class="fas fa-handshake-simple"></i>
+							</div>
+							<p>Gestion des partenaires</p>
+						</a>
 						<?php } if($verifPage_infos->page_dedicaces == 1) { ?>
 						<a href="./dedicaces" class="link">
 							<div class="link__image pink">

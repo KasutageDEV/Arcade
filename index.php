@@ -188,18 +188,6 @@ $page = 'index';
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-lg-12 col-md-12 col-sm-12">
-				<!-- Feed insta -->
-				<div class="bloc">
-					<div class="bloc__title">
-						<img src="./assets/imgs/emojis-mt/mobile-phone_1f4f1.png">
-						<h1>Feed Instagram</h1>
-					</div>
-					<center>Bientôt disponible</center>
-				</div>
-			</div>
-		</div>
 	</div>
 
 	<?php require('./models/footer.php'); ?>

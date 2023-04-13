@@ -24,6 +24,9 @@ function headerText($page) {
 		case 'user-list':
 			echo 'Gestion des membres';
 			break;
+		case 'partenaires':
+			echo 'Ajouter / Supprimer une catégorie ou un membre';
+			break;
 		case 'dedicaces':
 			echo 'Gestion des dédicaces';
 			break;
