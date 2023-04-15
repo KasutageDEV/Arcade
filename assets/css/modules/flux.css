@@ -7,10 +7,6 @@
 	margin-bottom: 20px;
 }
 
-.flux:nth-last-child(-n+1) {
-	margin-bottom: 150px;
-}
-
 .flux__info {
 	display: flex;
 	align-items: center;
