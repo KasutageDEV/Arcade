@@ -58,8 +58,9 @@
 				</div>
 				<?= headerText($page); ?>
 			</div>
-			<div class="main__count">
-				<span>50</span> HabboCity's en ligne !
+			<div class="main__btns">
+				<a href="#" class="profil"><i class="fas fa-user"></i></a>
+				<a href="#" class="settings"><i class="fas fa-cog"></i></a>
 			</div>
 		</div>
 	</section>
