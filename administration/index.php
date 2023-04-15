@@ -31,7 +31,7 @@ $count_nbrDedicaces = $nbrDedicaces->rowCount();
 
 if(isset($_POST['submit__information'])) {
 	if(!empty($_POST['message'])) {
-		$message 	= htmlspecialchars($_POST['message']);
+		$message 	= $_POST['message'];
 		$date 		= date('d-m-Y H:i:s');
 
 		$update = $bdd->prepare('UPDATE settings SET information = ?');
@@ -138,6 +138,13 @@ if(isset($_GET['reset-topgamer'])) {
 								<i class="fas fa-user-plus"></i>
 							</div>
 							<p>Rank</p>
+						</a>
+					<?php } if($verifPage_infos->page_userRankGestion == 1) { ?>
+						<a href="./user-rankGestion" class="link">
+							<div class="link__image success">
+								<i class="fas fa-user-plus"></i>
+							</div>
+							<p>Gestion des rank</p>
 						</a>
 						<?php } if($verifPage_infos->page_userList == 1) { ?>
 						<a href="./user-list" class="link">

@@ -35,6 +35,7 @@
 	cursor: pointer;
 	transition: background 0.3s ease-in-out;
 	float: right;
+	text-decoration: none;
 }
 
 .article__submit.red {background: #F55050;}

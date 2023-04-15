@@ -47,8 +47,8 @@ if(isset($_POST['submit__event'])) {
                     //$file = 5f586bf96dcd38.73540086.jpg
 
                     if(move_uploaded_file($tmpName, '../imagesEvent/'.$file)) {
-                        $insert = $bdd->prepare('INSERT INTO event(user_id, author, tag, image, link, date) VALUES(?, ?, ?, ?, ?, ?)');
-                        $insert->execute(array($session_infos->id, $author, $tag, $file, $link, $date));
+                        $insert = $bdd->prepare('INSERT INTO event(user_id, titre, author, tag, image, link, date) VALUES(?, ?, ?, ?, ?, ?, ?)');
+                        $insert->execute(array($session_infos->id, $titre, $author, $tag, $file, $link, $date));
 
                         $logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
                         $logs->execute(array($session_infos->id, 'à publier un event', $date));

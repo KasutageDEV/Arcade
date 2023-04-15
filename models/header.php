@@ -34,7 +34,14 @@
 					<li><a href="javascript:void(0);" id="openLoginModal" class="nav__btn">Se connecter</a></li>
 					<li><a href="javascript:void(0);" id="openRegisterModal" class="nav__btn register">S'inscrire</a></li>
 				<?php } else { ?>
+					<?php
+					$verifStaff = $bdd->prepare('SELECT * FROM users_staffs WHERE user_id = ?');
+					$verifStaff->execute(array($session_infos->id));
+					$verifStaff_count = $verifStaff->rowCount();
+					if($verifStaff_count == 1) {
+					?>
 					<li><a href="./administration/index" id="openRegisterModal" class="nav__btn admin">Administration</a></li>
+					<?php } ?>
 					<li><a href="./account/logout" id="openRegisterModal" class="nav__btn logout">Déconnexion</a></li>
 				<?php } ?>
 			</ul>
@@ -65,7 +72,7 @@
 			</div>
 			<marquee>
 				<?php
-				$dedi = $bdd->prepare('SELECT * FROM dedicaces WHERE etat = ?');
+				$dedi = $bdd->prepare('SELECT * FROM dedicaces WHERE etat = ? ORDER BY id DESC');
 				$dedi->execute(array(2));
 				while($dedi_infos = $dedi->fetch()) {
 					$user = $bdd->prepare('SELECT * FROM users WHERE id = ?');

@@ -61,7 +61,7 @@ $page = 'staffs';
 	<div class="container">
 		<div class="row">
 			<!-- LEFT -->
-			<div class="col-lg-7 col-md-6 col-sm-12">
+			<div class="col-lg-6 col-md-6 col-sm-12">
 				<!-- GESTION -->
 				<div class="bloc">
 					<div class="bloc__title">
@@ -161,7 +161,7 @@ $page = 'staffs';
 			</div>
 
 			<!-- RIGHT -->
-			<div class="col-lg-5 col-md-6 col-sm-12">
+			<div class="col-lg-6 col-md-6 col-sm-12">
 				<!-- ANIMATION -->
 				<div class="bloc">
 					<div class="bloc__title">

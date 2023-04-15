@@ -34,7 +34,9 @@ if(isset($_POST['submit__rank'])) {
 		$page_articleList 		= 0;
 		$page_articleValid 		= 0;
 		$page_userRank 			= 0;
+		$page_userRankGestion 	= 0;
 		$page_userList 			= 0;
+		$page_partenaires 		= 0;
 		$page_dedicaces			= 0;
 		$page_event 			= 0;
 		$page_flux	 			= 0;
@@ -49,7 +51,9 @@ if(isset($_POST['submit__rank'])) {
 		if(isset($_POST['page_articleList'])) 		{$page_articleList = 1;}
 		if(isset($_POST['page_articleValid'])) 		{$page_articleValid = 1;}
 		if(isset($_POST['page_userRank'])) 			{$page_userRank = 1;}
+		if(isset($_POST['page_userRankGestion'])) 	{$page_userRankGestion = 1;}
 		if(isset($_POST['page_userList'])) 			{$page_userList = 1;}
+		if(isset($_POST['page_partenaires'])) 		{$page_partenaires = 1;}
 		if(isset($_POST['page_dedicaces'])) 		{$page_dedicaces = 1;}
 		if(isset($_POST['page_event'])) 			{$page_event = 1;}
 		if(isset($_POST['page_flux'])) 				{$page_flux = 1;}
@@ -70,8 +74,8 @@ if(isset($_POST['submit__rank'])) {
         	if($verfistaff->rowCount() == 0) {
         		if($categorie == '1' || $categorie == '2'  || $categorie == '3'  || $categorie == '4'  || $categorie == '5'  || $categorie == '6'  || $categorie == '7') {
 
-        			$insert = $bdd->prepare('INSERT INTO users_staffs(user_id, fonction, badge, categorie_id, position, page_index, page_articleAdd, page_articleCorrect, page_articleList, page_article_Valid, page_userRank, page_userList, page_dedicaces, page_event, page_flux, page_apropos, page_bannis, classement, notification) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        			$insert->execute(array($user_infos->id, $fonction, $badge, $categorie, $position, 1, $page_articleAdd, $page_articleCorrect, $page_articleList, $page_articleValid, $page_userRank, $page_userList, $page_dedicaces, $page_event, $page_flux, $page_apropos, $page_bannis, $classement, $notification));
+        			$insert = $bdd->prepare('INSERT INTO users_staffs(user_id, fonction, badge, categorie_id, position, page_index, page_articleAdd, page_articleCorrect, page_articleList, page_articleValid, page_userRank, page_userRankGestion, page_userList, page_partenaires, page_dedicaces, page_event, page_flux, page_apropos, page_bannis, classement, notification) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        			$insert->execute(array($user_infos->id, $fonction, $badge, $categorie, $position, 1, $page_articleAdd, $page_articleCorrect, $page_articleList, $page_articleValid, $page_userRank, $page_userRankGestion, $page_userList, $page_partenaires, $page_dedicaces, $page_event, $page_flux, $page_apropos, $page_bannis, $classement, $notification));
         			$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
                     $logs->execute(array($session_infos->id, 'à rank '.$username, $date));
                     $validate = $username.' rank avec succès !';
@@ -193,9 +197,19 @@ if(isset($_POST['submit__rank'])) {
 											<label for="user-rank"></label>
 										</div>
 										<div class="rank__choice">
+											<p>Gestion des rank</p>
+											<input type="checkbox" name="page_userRankGestion" value="page_userRankGestion" id="user-rankGestion">
+											<label for="user-rankGestion"></label>
+										</div>
+										<div class="rank__choice">
 											<p>Gestion des membres</p>
 											<input type="checkbox" name="page_userList" value="page_userList" id="user-list">
 											<label for="user-list"></label>
+										</div>
+										<div class="rank__choice">
+											<p>Gestion des partenaires</p>
+											<input type="checkbox" name="page_partenaires" value="page_partenaires" id="partenaires">
+											<label for="partenaires"></label>
 										</div>
 										<div class="rank__choice">
 											<p>Gestion du classement</p>

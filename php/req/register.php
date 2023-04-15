@@ -53,7 +53,7 @@ if(!empty($_POST['username']) AND !empty($_POST['email']) AND !empty($_POST['pas
             echo 'Ce pseudo est déjà utilisé.';
         }
     } else {
-        echo "Le code secret inscrit dans votre humeur wibbo est incorrect !";
+        echo "Le code secret inscrit dans votre humeur habbocity est incorrect !";
     }     
 } else {
     echo 'Merci de remplir tous les champs.';

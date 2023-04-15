@@ -21,6 +21,9 @@ function headerText($page) {
 		case 'user-rank':
 			echo 'Rank un membre';
 			break;
+		case 'user-rankGestion':
+			echo 'Gestion des rank';
+			break;
 		case 'user-list':
 			echo 'Gestion des membres';
 			break;

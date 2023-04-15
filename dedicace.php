@@ -69,7 +69,7 @@ if(isset($_POST['submit__dedicace'])) {
 		<?php if(isset($_SESSION['id'])) { ?>
 		<div class="row">
 			<!-- LEFT -->
-			<div class="col-lg-8 col-md-6 col-sm-12">
+			<div class="col-lg-6 col-md-6 col-sm-12">
 				<div class="bloc">
 					<div class="bloc__title">
 						<img src="./assets/imgs/emojis-mt/black-nib_2712-fe0f.png">
@@ -107,7 +107,7 @@ if(isset($_POST['submit__dedicace'])) {
 				</div>
 			</div>
 			<!-- RIGHT -->
-			<div class="col-lg-4 col-md-6 col-sm-12">
+			<div class="col-lg-6 col-md-6 col-sm-12">
 				<div class="bloc">
 					<div class="bloc__title">
 						<img src="./assets/imgs/emojis-mt/eye-in-speech-bubble_1f441-fe0f-200d-1f5e8-fe0f.png">

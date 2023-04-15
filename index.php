@@ -104,7 +104,7 @@ $page = 'index';
 									<div class="news-hc__badge"># <?= $last_event_infos->tag; ?></div>
 									<h1><?= $last_event_infos->titre; ?></h1>
 									<h2>Publié par <span><?= $last_event_infos->author; ?></span></h2>
-									<a href="<?= $last_event_infos->link; ?>">Voir l'article</a>
+									<a href="<?= $last_event_infos->link; ?>" target="_blank">Voir l'article</a>
 								</div>
 								<img src="https://api.habbocity.me/avatar_image.php?user=<?= $last_event_infos->author; ?>&headonly=0&direction=2&head_direction=2&size=n">
 							</div>

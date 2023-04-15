@@ -17,6 +17,30 @@ if($verifPage->rowCount() == 0 OR $verifPage_infos->page_bannis == 0) {
 	exit();
 }
 
+if(isset($_POST['submit__ban'])) {
+	if(!empty($_POST['username']) AND !empty($_POST['reason'])) {
+		$username 	= htmlspecialchars($_POST['username']);
+		$date 		= date('d-m-Y H:i:s');
+
+		$ban = $bdd->prepare('UPDATE users SET is_ban = ? WHERE username = ?');
+		$ban->execute(array(1, $username));
+
+		$user = $bdd->prepare('SELECT * FROM users WHERE username = ?');
+		$user->execute(array($username));
+		$user_infos = $user->fetch();
+
+		$add = $bdd->prepare('INSERT INTO bans(user_id, reason, author, date) VALUES(?, ?, ?, ?)');
+		$add->execute(array($user_infos->id, $reason, $session_infos->username, $date));
+
+		$logs = $bdd->prepare('INSERT INTO logs(user_id, logs, date) VALUES(?, ?, ?)');
+	    $logs->execute(array($session_infos->id, 'à bannis '.$username, $date));
+
+	    $validate = 'Vous avez bien bannis '.$username;
+	} else {
+		$erreur = "Tous les champs sont obligatoire !";
+	}
+}
+
 if(isset($_POST['submit__deban'])) {
 	$user_id 	= intval($_POST['user_id']);
 	$date 		= date('d-m-Y H:i:s');
@@ -76,7 +100,20 @@ if(isset($_POST['submit__deban'])) {
 					<div class="alert success"><?= $validate; ?></div>
 					<?php } ?>
 					<div class="row">
-						<div class="col-lg-4 col-md-6 col-sm-12">
+						<div class="col-lg-3 col-md-6 col-sm-12">
+							<form method="POST" action="">
+								<div class="rank__group">
+									<label>Pseudo</label>
+									<input type="text" name="username" placeholder="Pseudo" class="rank__input">
+								</div>
+								<div class="rank__group">
+									<label>Raison</label>
+									<input type="text" name="reason" placeholder="Raison" class="rank__input">
+								</div>
+								<button type="submit" name="submit__ban" class="article__submit red">Bannir</button>
+							</form>
+						</div>
+						<div class="col-lg-9 col-md-6 col-sm-12">
 							<div class="article__table">
 								<table id="example" style="width:100%">
 							        <thead>
